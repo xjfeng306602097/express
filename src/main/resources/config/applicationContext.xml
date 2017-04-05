@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.1.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:properties/*.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass">
+			<value>${jdbc_driverClassName}</value>
+		</property>
+		<property name="jdbcUrl">
+			<value>${jdbc_url}</value>
+		</property>
+		<property name="user">
+			<value>${jdbc_username}</value>
+		</property>
+		<property name="password">
+			<value>${jdbc_password}</value>
+		</property>
+		<!-- c3p0连接池的私有属性 -->
+		<property name="maxPoolSize">
+			<value>${jdbc_maxIdle}</value>
+		</property>
+		<property name="minPoolSize">
+			<value>${jdbc_maxIdle}</value>
+		</property>
+		<!-- 关闭连接后不自动commit -->
+		<property name="autoCommitOnClose">
+			<value>false</value>
+		</property>
+		<!-- 获取连接超时时间 -->
+		<property name="checkoutTimeout">
+			<value>1000</value>
+		</property>
+		<!-- 当获取连接失败重试次数 -->
+		<property name="acquireRetryAttempts">
+			<value>2</value>
+		</property>
+	</bean>
+
+	<context:annotation-config />
+
+	<context:component-scan base-package="com.xiao.*" />
+
+	<!-- 自动扫描了所有的XxxxMapper.xml对应的mapper接口文件，这样就不用一个一个手动配置Mpper的映射了，只要Mapper接口类和Mapper映射文件对应起来就可以了。 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.express.dao" />
+	</bean>
+
+	<!-- 配置Mybatis的文件 ，mapperLocations配置**Mapper.xml文件位置，configLocation配置mybatis-config文件位置 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:config/sqlMap-config.xml" />
+		<property name="mapperLocations" value="classpath:sqlMapping/*.xml" />
+	</bean>
+
+	<!-- 事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- 配置编程式transactionTemplate -->
+	<bean id="transactionTemplate"
+		class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager" ref="transactionManager" />
+	</bean>
+
+	<!-- 配置注解式的事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+</beans>
