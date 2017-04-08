@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.express.dao.ExpressShelfDao">
+	<resultMap id="expressShelfResult" type="com.express.model.ExpressShelf">
+		<id property="shelfId" column="shelf_id" jdbcType="INTEGER"/>
+		<result property="createDate" column="create_date" jdbcType="DATE"/>
+		<result property="shelfStatus" column="shelf_status" jdbcType="VARCHAR"/>
+		<association property="express" column="expressinfo_id" select="com.express.dao.ExpressDao.getExpressInfoById"/>
+	</resultMap>
+
+	<insert id="insertExpressShelf" useGeneratedKeys="true"
+		keyProperty="shelfId">
+		insert into expressshelf values
+		(#{shelfId},#{express},#{createDate},#{status});
+	</insert>
+
+	<update id="updateExpressShelf">
+		update expressshelf
+		<set>
+			<if test="expressInfoId != null">
+				expressinfo_id = #{expressInfoId},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate},
+			</if>
+			<if test="status != null">
+				shelf_status = #{status}
+			</if>
+		</set>
+		where shelf_id = #{shelfId}
+	</update>
+	<update id="clearExpressShelf">
+			update expressshelf
+				SET expressinfo_id=NULL ,
+				create_date=NULL ,
+				shelf_status='N'
+			WHERE
+				shelf_id=#{shelfId}
+	</update>
+
+	<select id="queryShelfByParams" resultMap="expressShelfResult">
+		select shelf_id,expressinfo_id,create_date,shelf_status
+		from expressshelf
+		<where>
+			<if test="shelfId != null">
+				shelf_id = #{shelfId}
+			</if>
+			<if test="expressInfoId != null">
+				and expressinfo_id = #{expressInfoId}
+			</if>
+			<if test="createDate != null">
+				and create_date = #{createDate}
+			</if>
+			<if test="status != null">
+				and shelf_status = #{status}
+			</if>
+		</where>
+	</select>
+	<select id="queryAllShelfExpress" resultMap="expressShelfResult">
+		select shelf_id,expressinfo_id,create_date,shelf_status
+		from expressshelf
+	</select>
+
+</mapper> 
