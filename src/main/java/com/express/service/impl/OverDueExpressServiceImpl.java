@@ -22,7 +22,7 @@ public class OverDueExpressServiceImpl implements OverDueExpressService {
     }
 
     @Override
-    public List getContactsWithOverDue() {
+    public List<String> getContactsWithOverDue() {
         //获取所有隔日件
         List<OverDueExpress> overDueExpresses=overDueExpressDao.queryALLShelf();
         //获取所有联系方式
