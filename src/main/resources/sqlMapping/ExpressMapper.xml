@@ -22,7 +22,7 @@
         INSERT INTO  express.expressinfo(id,express_no, from_date, arrive_date, receive_date, company
            , consignee, contact, verification_code, address_source, address_dest, express_status)
         VALUES (#{id},#{expressNo},#{fromDate}, #{arriveDate},#{receiveDate},#{company},#{consignee},#{contact}
-        ,#{verificationCode},#{addressSource},#{addressDest},#{expressStatus});
+        ,#{verificationCode},#{addressSource},#{addressDest},#{status});
     </insert>
 
     <update id="updateExpressInfo" >
@@ -72,8 +72,8 @@
               address_dest=#{addressDest},
             </if>
 
-            <if test="expressStatus!=null">
-              express_status=#{expressStatus}
+            <if test="status!=null">
+              express_status=#{status}
             </if>
         </set>
           where id=#{id}
