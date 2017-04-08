@@ -1,7 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.epress.dao.ExpressDao">
+<mapper namespace="com.express.dao.ExpressDao" >
+    <resultMap  type="com.express.model.Express" id="expressResult">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="expressNo" column="express_no" jdbcType="VARCHAR"/>
+        <result property="fromDate" column="from_date" jdbcType="DATE"/>
+        <result property="arriveDate" column="arrive_date" jdbcType="DATE"/>
+        <result property="receiveDate" column="receive_date" jdbcType="DATE"/>
+        <result property="company" column="company" jdbcType="VARCHAR"/>
+        <result property="consignee" column="consignee" jdbcType="VARCHAR"/>
+        <result property="contact" column="contact" jdbcType="VARCHAR"/>
+        <result property="verificationCode" column="verification_code" jdbcType="VARCHAR"/>
+        <result property="addressSource" column="address_source" jdbcType="VARCHAR"/>
+        <result property="addressDest" column="address_dest" jdbcType="VARCHAR"/>
+        <result property="status" column="express_status" jdbcType="VARCHAR"/>
+    </resultMap>
 
+    <insert id="insertExpressInfo" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO  express.expressinfo(id,express_no, from_date, arrive_date, receive_date, company
+           , consignee, contact, verification_code, address_source, address_dest, express_status)
+        VALUES (#{id},#{expressNo},#{fromDate}, #{arriveDate},#{receiveDate},#{company},#{consignee},#{contact}
+        ,#{verificationCode},#{addressSource},#{addressDest},#{expressStatus});
+    </insert>
 
+    <update id="updateExpressInfo" >
+        UPDATE
+        express.expressinfo
+        <set>
+            <if test="expressNo!=null" >
+                express_no=#{expressNo},
+            </if>
+
+            <if test="fromDate!=null">
+               from_date =#{fromDate},
+            </if>
+
+            <if test="arriveDate!=null">
+              arrive_date=#{arriveDate,jdbcType=DATE},
+            </if>
+
+            <if test="receiveDate!=null">
+              receive_date=#{receiveDate,jdbcType=DATE},
+            </if>
+
+            <if test="company!=null">
+              company=#{company},
+            </if>
+            <if test="contact!=null">
+              contact=#{contact},
+            </if>
+
+            <if test="consignee!=null">
+              consignee=#{consignee},
+            </if>
+
+            <if test="verificationCode!=null">
+              contact=#{contact},
+            </if>
+
+            <if test="receiveDate!=null">
+              verification_code=#{verificationCode},
+            </if>
+
+            <if test="addressSource!=null">
+              address_source=#{addressSource},
+            </if>
+
+            <if test="addressDest!=null">
+              address_dest=#{addressDest},
+            </if>
+
+            <if test="expressStatus!=null">
+              express_status=#{expressStatus}
+            </if>
+        </set>
+          where id=#{id}
+    </update>
+
+    <select id="queryExpressInfo" resultMap="expressResult">
+        SELECT
+        id,express_no, from_date, arrive_date, receive_date, company
+        , consignee, contact, verification_code, address_source, address_dest, express_status
+        FROM   express.expressinfo
+        where
+          1=1
+        <if test="contact!=null">
+            and contact=#{contact}
+        </if>
+        <if test="expressNo!=null">
+            and express_no=#{expressNo}
+        </if>
+    </select>
+
+    <select id="getExpressInfoById" resultMap="expressResult">
+        SELECT
+        id,express_no, from_date, arrive_date, receive_date, company
+           , consignee, contact, verification_code, address_source, address_dest, express_status
+        FROM express.expressinfo
+        where
+          id=#{id}
+    </select>
+
+    <delete id="deleteExpress">
+        DELETE from express.expressinfo WHERE express_no=#{expressNo}
+    </delete>
 </mapper> 
