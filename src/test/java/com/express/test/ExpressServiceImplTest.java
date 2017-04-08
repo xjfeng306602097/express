@@ -1,21 +1,17 @@
 package com.express.test;
 
+import java.util.List;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.express.model.Express;
 import com.express.service.ExpressService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.List;
 
 
 /**
  * Created by wshibiao on 2017/4/7.
  */
-@ContextConfiguration(locations={"classpath*:config/applicationContext.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
 public class ExpressServiceImplTest {
     @Autowired
     private ExpressService expressService;
