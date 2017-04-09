@@ -18,8 +18,8 @@
 	<update id="updateExpressShelf">
 		update expressshelf
 		<set>
-			<if test="express.id != 0">
-				expressinfo_id = #{express.id},
+			<if test="express != 0">
+				expressinfo_id = #{express},
 			</if>
 			<if test="createDate != null">
 				create_date = #{createDate},
@@ -46,8 +46,8 @@
 			<if test="shelfId != 0">
 				shelf_id = #{shelfId}
 			</if>
-			<if test="express.id!= null">
-				and expressinfo_id = #{exprss.id}
+			<if test="express= null">
+				and expressinfo_id = #{exprss}
 			</if>
 			<if test="createDate != null">
 				and create_date = #{createDate}
