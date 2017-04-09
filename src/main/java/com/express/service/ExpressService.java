@@ -16,4 +16,6 @@ public interface ExpressService {
 
 	public void deleteExpress(Express express);
 
+	boolean affirmCode(Express express, String verificationCode);
+
 }

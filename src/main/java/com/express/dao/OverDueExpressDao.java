@@ -27,4 +27,10 @@ public interface OverDueExpressDao {
      * @return
      */
     public List<OverDueExpress> queryALLShelf();
+    
+    /**
+     * 查询特定状态下的快递
+     * @return list
+     */
+    public List<OverDueExpress> queryShelfListByParams(OverDueExpress overDueExpress);
 }

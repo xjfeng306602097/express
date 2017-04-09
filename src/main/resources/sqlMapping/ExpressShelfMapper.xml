@@ -18,7 +18,7 @@
 	<update id="updateExpressShelf">
 		update expressshelf
 		<set>
-			<if test="expressInfoId != null">
+			<if test="expressInfoId != 0">
 				expressinfo_id = #{expressInfoId},
 			</if>
 			<if test="createDate != null">
@@ -43,7 +43,7 @@
 		select shelf_id,expressinfo_id,create_date,shelf_status
 		from expressshelf
 		<where>
-			<if test="shelfId != null">
+			<if test="shelfId != 0">
 				shelf_id = #{shelfId}
 			</if>
 			<if test="expressInfoId != null">

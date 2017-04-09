@@ -13,7 +13,7 @@ public interface ExpressShelfDao {
      *将快递放入货架
      * @param shelf
      */
-    public void  insertExpressShelf(ExpressShelf shelf);
+    public void  insertExpressShelf(ExpressShelf expressShelf);
     /**
      *清空货柜
      * @param
@@ -23,4 +23,6 @@ public interface ExpressShelfDao {
      *查询货架上的所有快递
      */
     public List<ExpressShelf> queryAllShelfExpress();
+    
+    int updateExpressShelf(ExpressShelf expressShelf);
 }

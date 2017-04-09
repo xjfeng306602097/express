@@ -6,7 +6,8 @@
 		<id property="overDueShelfId" column="shelf_id" jdbcType="INTEGER" />
 		<result property="createDate" column="create_date" jdbcType="DATE" />
 		<result property="status" column="shelf_status" jdbcType="VARCHAR" />
-		<association property="express" column="expressinfo_id" select="com.express.dao.ExpressDao.getExpressInfoById"/>
+		<association property="express" column="expressinfo_id"
+			select="com.express.dao.ExpressDao.getExpressInfoById" />
 
 	</resultMap>
 
@@ -29,17 +30,18 @@
 				shelf_status = #{status}
 			</if>
 		</set>
-		where shelf_id = #{shelfId}
+		where shelf_id = #{overDueShelfId}
 	</update>
 
 	<select id="queryShelfByParams" resultMap="expressShelfResult">
 		select shelf_id,expressinfo_id,create_date,shelf_status
-		from overdueexpress
+		from
+		overdueexpress
 		<where>
-			<if test="shelfId != null">
-				shelf_id = #{shelfId}
+			<if test="overDueShelfId != null">
+				shelf_id = #{overDueShelfId}
 			</if>
-			<if test="expressInfoId != null">
+			<if test="express != null">
 				and expressinfo_id = #{express}
 			</if>
 			<if test="createDate != null">
@@ -50,10 +52,32 @@
 			</if>
 		</where>
 	</select>
+
 	<select id="queryALLShelf" resultMap="expressShelfResult">
-		select shelf_id,expressinfo_id,create_date,shelf_status
+		select
+		shelf_id,expressinfo_id,create_date,shelf_status
 		from overdueexpress
 	</select>
 
+	<select id="queryShelfListByParams" resultMap="expressShelfResult">
+		select 
+		shelf_id,expressinfo_id,create_date,shelf_status
+		from
+		overdueexpress
+		<where>
+			<if test="overDueShelfId != 0">
+				shelf_id = #{overDueShelfId}
+			</if>
+			<if test="express != null">
+				and expressinfo_id = #{express}
+			</if>
+			<if test="createDate != null">
+				and create_date = #{createDate}
+			</if>
+			<if test="status != null">
+				and shelf_status = #{status}
+			</if>
+		</where>
+	</select>
 
 </mapper> 

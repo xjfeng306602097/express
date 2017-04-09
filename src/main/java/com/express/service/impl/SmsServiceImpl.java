@@ -10,10 +10,16 @@ import java.util.List;
  */
 @Service
 public class SmsServiceImpl implements SmsService {
-    @Override
-    public void sendSMS(String smsContent, List<String> contacts) {
-        for(int i=0;i<contacts.size();i++){
-            System.out.println(contacts.get(i));
-        }
-    }
+	@Override
+	public void sendSMS(String smsContent, List<String> contacts) {
+		for (int i = 0; i < contacts.size(); i++) {
+			System.out.println(contacts.get(i));
+		}
+	}
+
+	@Override
+	public void sendMessage(String contacts, String smsContent) {
+		System.out.println("Contact phone = " + contacts + " smsContent" + smsContent);
+	}
+
 }

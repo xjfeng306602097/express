@@ -14,25 +14,30 @@ import java.util.List;
  */
 @Service
 public class OverDueExpressServiceImpl implements OverDueExpressService {
-    @Resource
-    OverDueExpressDao overDueExpressDao;
-    @Override
-    public OverDueExpress queryShelfByParams(OverDueExpress overDueExpress) {
-       return null;
-    }
+	@Resource
+	OverDueExpressDao overDueExpressDao;
 
-    @Override
-    public List<String> getContactsWithOverDue() {
-        //获取所有隔日件
-        List<OverDueExpress> overDueExpresses=overDueExpressDao.queryALLShelf();
-        //获取所有联系方式
-        List contacts=new ArrayList();
-        if (overDueExpresses.size()>0) {
-            for (OverDueExpress overDueExpress :
-                    overDueExpresses) {
-                contacts.add(overDueExpress.getExpress().getContact());
-            }
-        }
-       return contacts;
-    }
+	@Override
+	public OverDueExpress queryShelfByParams(OverDueExpress overDueExpress) {
+		return null;
+	}
+
+	@Override
+	public List<String> getContactsWithOverDue() {
+		// 获取所有隔日件
+		List<OverDueExpress> overDueExpresses = overDueExpressDao.queryALLShelf();
+		// 获取所有联系方式
+		List contacts = new ArrayList();
+		if (overDueExpresses.size() > 0) {
+			for (OverDueExpress overDueExpress : overDueExpresses) {
+				contacts.add(overDueExpress.getExpress().getContact());
+			}
+		}
+		return contacts;
+	}
+
+	@Override
+	public List<OverDueExpress> queryShelfListByParams(OverDueExpress overDueExpress) {
+		return overDueExpressDao.queryShelfListByParams(overDueExpress);
+	}
 }

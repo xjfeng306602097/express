@@ -16,5 +16,12 @@ public interface OverDueExpressService {
      * @return
      */
     public List<String> getContactsWithOverDue();
-
+    
+    /**
+     * 根据参数获取隔日快递的收件人联系方式
+     * @param overDueExpress
+     * @return
+     */
+    public List<OverDueExpress> queryShelfListByParams(OverDueExpress overDueExpress);
+    
 }
