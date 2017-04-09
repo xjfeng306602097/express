@@ -9,7 +9,7 @@ public interface OverDueExpressDao {
      * 更新隔日快递信息
      * @param overDueExpress
      */
-    public void updateExpressShelf(OverDueExpress overDueExpress);
+    public void updateOverDueExpressShelf(OverDueExpress overDueExpress);
 
     /**
      * 插入隔日快递

@@ -24,5 +24,5 @@ public interface ExpressShelfDao {
      */
     public List<ExpressShelf> queryAllShelfExpress();
     
-    int updateExpressShelf(ExpressShelf expressShelf);
+    public void updateExpressShelf(ExpressShelf expressShelf);
 }

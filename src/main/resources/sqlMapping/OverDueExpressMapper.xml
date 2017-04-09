@@ -17,11 +17,14 @@
 		(#{overDueShelfId},#{express.id},#{createDate},#{status});
 	</insert>
 
-	<update id="updateExpressShelf">
+	<update id="updateOverDueExpressShelf">
 		update overdueexpress
 		<set>
+			<if test="overDueShelfId != null">
+				 shelf_id= #{overDueShelfId},
+			</if>
 			<if test="express != null">
-				expressinfo_id = #{express},
+				expressinfo_id = #{express.id},
 			</if>
 			<if test="createDate != null">
 				create_date = #{createDate},
@@ -30,7 +33,7 @@
 				shelf_status = #{status}
 			</if>
 		</set>
-		where shelf_id = #{overDueShelfId}
+		where expressinfo_id = #{express.id}
 	</update>
 
 	<select id="queryShelfByParams" resultMap="expressShelfResult">
