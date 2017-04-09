@@ -11,7 +11,7 @@ public interface ExpressShelfDao {
 
     /**
      *将快递放入货架
-     * @param shelf
+     * @param expressShelf
      */
     public void  insertExpressShelf(ExpressShelf expressShelf);
     /**

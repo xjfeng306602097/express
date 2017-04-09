@@ -12,20 +12,20 @@
 	<insert id="insertExpressShelf" useGeneratedKeys="true"
 		keyProperty="shelfId">
 		insert into expressshelf values
-		(#{shelfId},#{express},#{createDate},#{status});
+		(#{shelfId},#{express},#{createDate},#{shelfStatus});
 	</insert>
 
 	<update id="updateExpressShelf">
 		update expressshelf
 		<set>
-			<if test="expressInfoId != 0">
-				expressinfo_id = #{expressInfoId},
+			<if test="express.id != 0">
+				expressinfo_id = #{express.id},
 			</if>
 			<if test="createDate != null">
 				create_date = #{createDate},
 			</if>
 			<if test="status != null">
-				shelf_status = #{status}
+				shelf_status = #{shelfStatus}
 			</if>
 		</set>
 		where shelf_id = #{shelfId}
@@ -46,14 +46,14 @@
 			<if test="shelfId != 0">
 				shelf_id = #{shelfId}
 			</if>
-			<if test="expressInfoId != null">
-				and expressinfo_id = #{expressInfoId}
+			<if test="express.id!= null">
+				and expressinfo_id = #{exprss.id}
 			</if>
 			<if test="createDate != null">
 				and create_date = #{createDate}
 			</if>
-			<if test="status != null">
-				and shelf_status = #{status}
+			<if test="shelfStatus != null">
+				and shelf_status = #{shelfStatus}
 			</if>
 		</where>
 	</select>
