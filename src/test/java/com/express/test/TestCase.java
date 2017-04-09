@@ -1,5 +1,6 @@
 package com.express.test;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,6 +18,7 @@ import com.express.dao.OverDueExpressDao;
 import com.express.model.Express;
 import com.express.model.OverDueExpress;
 import com.express.service.SmsService;
+import com.express.util.PropertyUtil;
 
 public class TestCase extends BaseTestCase {
 
@@ -35,16 +37,17 @@ public class TestCase extends BaseTestCase {
 
 	/**
 	 * 继承BaseTestCase即可
+	 * @throws IOException 
 	 */
 	@Test
-	public void test() {
+	public void test() throws IOException {
 		OverDueExpress params = new OverDueExpress();
 		params.setStatus("0");
 		List<OverDueExpress> overDueExpressList = overDueExpressDao.queryShelfListByParams(params);
 		for (OverDueExpress overDueExpress : overDueExpressList) {
 			Express express = overDueExpress.getExpress();
 			String contact = express.getContact();// 获取手机号
-			String verificationCode = DigestUtils.md5DigestAsHex((express.getVerificationCode() + salt).getBytes())
+			String verificationCode = DigestUtils.md5DigestAsHex((express.getVerificationCode() + PropertyUtil.getProperty("Salt")).getBytes())
 					.substring(0, 6); // 获取验证码
 			smsService.sendMessage(contact, "Your vertificationConde is " + verificationCode);
 		}

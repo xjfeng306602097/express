@@ -5,12 +5,16 @@ import com.express.model.OverDueExpress;
 import com.express.service.OverDueExpressService;
 import com.express.service.SmsService;
 import com.express.timer.IExecuteTimer;
+import com.express.util.PropertyUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
+
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -18,8 +22,6 @@ import java.util.List;
  */
 @Component
 public class SendSMSTimer implements IExecuteTimer {
-
-	private static final String SALT = "avadfa%^%#!&#%^fdafafa~@$%^$&&^%&erere}{}*(*&*^";
 
 	@Autowired
 	private SmsService smsService;
@@ -45,14 +47,14 @@ public class SendSMSTimer implements IExecuteTimer {
 	}
 
 	@Scheduled(cron = "0 0/1 * * * ?")
-	public void sendOverDueMessage() {
+	public void sendOverDueMessage() throws IOException {
 		OverDueExpress params = new OverDueExpress();
 		params.setStatus("0");
 		List<OverDueExpress> overDueExpressList = overDueExpressService.queryShelfListByParams(params);
 		for (OverDueExpress overDueExpress : overDueExpressList) {
 			Express express = overDueExpress.getExpress();
 			String contact = express.getContact();// 获取手机号
-			String verificationCode = DigestUtils.md5DigestAsHex((express.getVerificationCode() + SALT).getBytes())
+			String verificationCode = DigestUtils.md5DigestAsHex((express.getVerificationCode() + PropertyUtil.getProperty("Salt")).getBytes())
 					.substring(0, 6); // 获取验证码
 			smsService.sendMessage(contact, "Your vertificationConde is " + verificationCode);
 		}
