@@ -1,6 +1,7 @@
 package com.express.service.impl;
 
 import com.express.dao.OverDueExpressDao;
+import com.express.model.Express;
 import com.express.model.OverDueExpress;
 import com.express.service.OverDueExpressService;
 import org.springframework.stereotype.Service;
@@ -23,17 +24,17 @@ public class OverDueExpressServiceImpl implements OverDueExpressService {
 	}
 
 	@Override
-	public List<String> getContactsWithOverDue() {
+	public List<Express> getExpressWithOverDue() {
 		// 获取所有隔日件
 		List<OverDueExpress> overDueExpresses = overDueExpressDao.queryALLShelf();
 		// 获取所有联系方式
-		List contacts = new ArrayList();
+		List<Express> expresses = new ArrayList<Express>();
 		if (overDueExpresses.size() > 0) {
 			for (OverDueExpress overDueExpress : overDueExpresses) {
-				contacts.add(overDueExpress.getExpress().getContact());
+				expresses.add(overDueExpress.getExpress());
 			}
 		}
-		return contacts;
+		return expresses;
 	}
 
 	@Override

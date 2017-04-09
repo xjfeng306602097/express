@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class SendSMSTimer implements IExecuteTimer {
 
 	@Autowired
 	private SmsService smsService;
-	@Autowired
+	@Resource
 	private OverDueExpressService overDueExpressService;
 
 	// 每天早上8点
@@ -32,11 +33,8 @@ public class SendSMSTimer implements IExecuteTimer {
 	public void execute() {
 		// 获取隔日件的收件人联系方式
 		String smsContent = "";
-		List contacts = overDueExpressService.getContactsWithOverDue();
-		// 发送短信
-		if (contacts.size() > 0) {
-			smsService.sendSMS(smsContent, contacts);
-		}
+		List<Express> expresses = overDueExpressService.getExpressWithOverDue();
+
 
 	}
 

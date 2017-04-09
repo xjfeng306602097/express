@@ -28,7 +28,7 @@ public class OverDueExpressServiceImplTest {
     private OverDueExpressDao overDueExpressDao;
     @Test
     public void queryShelf(){
-        List<String> contactsWithOverDue=overDueExpressService.getContactsWithOverDue();
+        List<Express> contactsWithOverDue=overDueExpressService.getExpressWithOverDue();
 
         for(int i=0;i<contactsWithOverDue.size();i++){
             System.out.println(contactsWithOverDue.get(i));
