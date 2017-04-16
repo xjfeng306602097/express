@@ -43,11 +43,12 @@
 		select shelf_id,expressinfo_id,create_date,shelf_status
 		from expressshelf
 		<where>
-			<if test="shelfId != 0">
-				shelf_id = #{shelfId}
+			1=1
+			<if test="shelfId != 0 and shelfId!=null">
+				and shelf_id = #{shelfId}
 			</if>
-			<if test="express= null">
-				and expressinfo_id = #{exprss}
+			<if test="express!= null">
+				and expressinfo_id = #{express.id}
 			</if>
 			<if test="createDate != null">
 				and create_date = #{createDate}

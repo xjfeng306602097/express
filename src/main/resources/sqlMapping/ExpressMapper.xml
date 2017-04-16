@@ -86,10 +86,10 @@
         FROM   express.expressinfo
         where
           1=1
-        <if test="contact!=null">
+        <if test="contact!=null and  contact!=''">
             and contact=#{contact}
         </if>
-        <if test="expressNo!=null">
+        <if test="expressNo!=null and  expressNo!=''">
             and express_no=#{expressNo}
         </if>
     </select>
