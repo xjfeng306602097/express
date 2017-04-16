@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Insert title here</title>
+	<link href="../css/bootstrap.css" type="text/css" rel="stylesheet"
+		  media="all">
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/bootstrap-3.1.1.min.js"></script>
+	<style class="form" style="width:1200px"></style>
+	<style class="d1" style="
+		   position: absolute;
+		   visibility: hidden;
+		   overflow: hidden;
+		   border:1px solid #CCC;
+		   background-color:#F9F9F9;
+		   border:1px solid #333;
+		   padding:5px;
+		   ">
+	</style>
+
+</head>
+<body style=" background-color: #fff">
+	<section class="section 1">
+		<h1 class="tab">查找快递信息</h1>
+		<form  class="form-inline" id="params">
+			<label >日期</label>
+			<div class="form-group">
+				<input id="arriveDate" type="date"  class="form-control"/>
+			</div>
+			<label >快递单号</label>
+			<div class="form-group">
+				<input id="expressNo"  class="form-control" type="text" maxlength="15" required="required" placeholder="输入快递单号"/>
+			</div>
+			<label >手机号</label>
+			<div class="form-group">
+				<input id="phoneNumber"  class="form-control" type="tel" maxlength="11" required="required" placeholder="输入手机号"/>
+			</div>
+			<button class="btn btn-default" type="button" onclick="sub()" >查询</button>
+		</form>
+	</section>
+	<section class="list" id="result">
+		<h2 class="h2">查询结果</h2>
+		<div class="bs-example" data-example-id="bordered-table">
+			<table class="table table-bordered" id="tb1">
+				<thead>
+					<th rowspan="2">日期</th>
+					<th rowspan="2">快递单号</th>
+					<th rowspan="2">快递公司</th>
+					<th rowspan="2">联系方式</th>
+					<th rowspan="2">地址</th>
+					<th rowspan="2">快递状态</th>
+					<th rowspan="2">操作</th>
+				</thead>
+			</table>
+		</div>
+		</section>
+	<div id="dialog" style="visibility: hidden" class="d1">
+		<input type="text" id="val-code" required="required" placeholder="输入取件密码" />
+		<button type="button" id="val-sbt" class="btn btn-default" onclick="submitVal()">提交</button>
+		<button type="button" id="val-cal" class="btn btn-default" onclick="closeDiv()">取消</button>
+	</div>
+	<script type="text/javascript">
+		function sub() {
+			var tb = document.createElement("tbody");
+			var table = document.getElementById("tb1");
+			var expressNo = $('#expressNo').val();
+			var contact = $('#phoneNumber').val();
+			var arriveDate = $('#arriveDate').val();
+			if (tb != null) {
+				$("tbody").remove();
+			}
+			$.ajax({
+				type: "get",
+				url: "getParam",
+				dateType: JSON,
+				data: "contact=" + contact + "&expressNo=" + expressNo + "&arriveDate=" + arriveDate,
+				success: function (data) {
+					var expresses = [];
+					$.each(data, function (index, e) {
+						expresses.push(e);
+					});
+					$.each(expresses, function (index, obj) {
+						tb.insertRow(index);
+						tb.rows[index].insertCell(0);
+						var date = new Date(obj.fromDate).toLocaleDateString();
+						tb.rows[index].cells[0].appendChild(document.createTextNode(date));
+						tb.rows[index].insertCell(1);
+						tb.rows[index].cells[1].appendChild(document.createTextNode(obj.expressNo));
+						tb.rows[index].insertCell(2);
+						tb.rows[index].cells[2].appendChild(document.createTextNode(obj.company));
+						tb.rows[index].insertCell(3);
+						tb.rows[index].cells[3].appendChild(document.createTextNode(obj.contact));
+						tb.rows[index].insertCell(4);
+						tb.rows[index].cells[4].appendChild(document.createTextNode(obj.addressDest));
+						tb.rows[index].insertCell(5);
+						tb.rows[index].cells[5].appendChild(document.createTextNode(obj.status));
+						tb.rows[index].insertCell(6);
+						var input = document.createElement("input");
+						input.type = "button";
+						input.value = "取件";
+						input.addEventListener("click",validate , false);
+						tb.rows[index].cells[6].appendChild(input);
+						table.appendChild(tb);
+					})
+				}
+			});
+			}
+
+
+		function validate() {
+				var div=document.getElementById("dialog");
+				div.style.visibility="visible";
+	//            div.style.top = "200px";//窗口距离浏览器内容区最上方的偏移值
+	//            div.style.left = "200px";//窗口距离浏览器内容区最左边的偏移值
+	//            div.style.width = w + "px";//窗口的宽度
+	//            div.style.height = h + "px";//窗口的高度
+	//			input.type="text";
+	//			input.placeholder="输入验证码";
+	//			input.class="form-control";
+	//			var bt=document.createElement("input");
+	//			bt.value="提交";
+	//            bt.type="button";
+	//            bt.addEventListener("click",function () {
+	//				alert("dyn");
+	//            },false);
+	//            bt.class="form-control";
+	//			document.body.appendChild(div);
+	//			div.appendChild(input);
+	//			div.appendChild(bt);
+			}
+
+			function submitVal() {
+				var code=document.getElementById("val-code").value;
+				alert(code);
+
+			}
+			function closeDiv() {
+				var div=document.getElementById("dialog");
+				div.style.visibility="hidden";
+			}
+
+	</script>
+</body>
+</html>

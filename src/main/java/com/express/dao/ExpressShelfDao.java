@@ -25,4 +25,6 @@ public interface ExpressShelfDao {
     public List<ExpressShelf> queryAllShelfExpress();
     
     public void updateExpressShelf(ExpressShelf expressShelf);
+
+    public ExpressShelf queryShelfByParams(ExpressShelf expressShelf);
 }
