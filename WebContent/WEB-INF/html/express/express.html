@@ -136,6 +136,17 @@
 			function submitVal() {
                 var code = document.getElementById("val-code").value;
                 alert(code);
+                $('#myModal').modal('hide');
+                $.ajax({
+                    type: "get",
+                    url: "getShelf",
+                    dateType: JSON,
+                    data: "code="+code,
+                    success: function (data) {
+
+                    }
+
+                });
 
             }
 			function closeDiv() {
