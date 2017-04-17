@@ -22,6 +22,30 @@
 
 </head>
 <body style=" background-color: #fff">
+	<!-- Button trigger modal -->
+
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="exampleModalLabel">输入取件密码</h4>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="form-group">
+							<label for="val-code" class="control-label">取件密码:</label>
+							<input type="text" class="form-control" id="val-code" placeholder="输入取件密码">
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="submitVal()">提交</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<section class="section 1">
 		<h1 class="tab">查找快递信息</h1>
 		<form  class="form-inline" id="params">
@@ -37,7 +61,7 @@
 			<div class="form-group">
 				<input id="phoneNumber"  class="form-control" type="tel" maxlength="11" required="required" placeholder="输入手机号"/>
 			</div>
-			<button class="btn btn-default" type="button" onclick="sub()" >查询</button>
+			<button class="btn btn-primary" type="button" onclick="sub()" >查询</button>
 		</form>
 	</section>
 	<section class="list" id="result">
@@ -56,11 +80,6 @@
 			</table>
 		</div>
 		</section>
-	<div id="dialog" style="visibility: hidden" class="d1">
-		<input type="text" id="val-code" required="required" placeholder="输入取件密码" />
-		<button type="button" id="val-sbt" class="btn btn-default" onclick="submitVal()">提交</button>
-		<button type="button" id="val-cal" class="btn btn-default" onclick="closeDiv()">取消</button>
-	</div>
 	<script type="text/javascript">
 		function sub() {
 			var tb = document.createElement("tbody");
@@ -98,7 +117,8 @@
 						tb.rows[index].cells[5].appendChild(document.createTextNode(obj.status));
 						tb.rows[index].insertCell(6);
 						var input = document.createElement("input");
-						input.type = "button";
+						input.type ="button";
+						input.class="btn btn-default";
 						input.value = "取件";
 						input.addEventListener("click",validate , false);
 						tb.rows[index].cells[6].appendChild(input);
@@ -110,32 +130,14 @@
 
 
 		function validate() {
-				var div=document.getElementById("dialog");
-				div.style.visibility="visible";
-	//            div.style.top = "200px";//窗口距离浏览器内容区最上方的偏移值
-	//            div.style.left = "200px";//窗口距离浏览器内容区最左边的偏移值
-	//            div.style.width = w + "px";//窗口的宽度
-	//            div.style.height = h + "px";//窗口的高度
-	//			input.type="text";
-	//			input.placeholder="输入验证码";
-	//			input.class="form-control";
-	//			var bt=document.createElement("input");
-	//			bt.value="提交";
-	//            bt.type="button";
-	//            bt.addEventListener("click",function () {
-	//				alert("dyn");
-	//            },false);
-	//            bt.class="form-control";
-	//			document.body.appendChild(div);
-	//			div.appendChild(input);
-	//			div.appendChild(bt);
+            $('#myModal').modal('show')
 			}
 
 			function submitVal() {
-				var code=document.getElementById("val-code").value;
-				alert(code);
+                var code = document.getElementById("val-code").value;
+                alert(code);
 
-			}
+            }
 			function closeDiv() {
 				var div=document.getElementById("dialog");
 				div.style.visibility="hidden";
