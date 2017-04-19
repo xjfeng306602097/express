@@ -16,8 +16,13 @@
 
 	<mvc:resources location="/WEB-INF/resources/img/"
 		mapping="/img/**" />
+		
+	<mvc:resources location="/WEB-INF/resources/fonts/"
+		mapping="/fonts/**" />
 
 	<mvc:resources location="/WEB-INF/resources/js/" mapping="/js/**" />
+	
+	<mvc:resources location="/WEB-INF/js/" mapping="/express_js/**" />
 
 	<!-- 自动扫描对应包下的所有类，使其为controller -->
 	<context:component-scan base-package="com.express.controller" />
