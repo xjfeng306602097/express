@@ -35,13 +35,14 @@
 		</set>
 		where expressinfo_id = #{express.id}
 	</update>
-
+	
 	<select id="queryShelfByParams" resultMap="expressShelfResult">
-		select shelf_id,expressinfo_id,create_date,shelf_status
+		select 
+		shelf_id,expressinfo_id,create_date,shelf_status
 		from
 		overdueexpress
 		<where>
-			<if test="overDueShelfId != null">
+			<if test="overDueShelfId != 0">
 				shelf_id = #{overDueShelfId}
 			</if>
 			<if test="express != null">

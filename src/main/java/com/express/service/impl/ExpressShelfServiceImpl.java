@@ -22,10 +22,6 @@ public class ExpressShelfServiceImpl implements ExpressShelfService {
 	ExpressShelfDao expressShelfDao;
 	@Resource
 	OverDueExpressDao overDueExpressDao;
-	// @Override
-	// public ExpressShelf getShelfByExpressId(Long id) {
-	// return expressShelfDao.getShelfByExpressId(new Long(1));
-	// }
 
 	/**
 	 * 将过期快件移入隔日货柜
@@ -52,4 +48,8 @@ public class ExpressShelfServiceImpl implements ExpressShelfService {
 		expressShelfDao.updateExpressShelf(expressShelf);
 	}
 
+	@Override
+	public ExpressShelf queryShelfByParams(ExpressShelf expressShelf) {
+		return expressShelfDao.queryShelfByParams(expressShelf);
+	}
 }

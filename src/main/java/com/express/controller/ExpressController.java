@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.express.dao.ExpressShelfDao;
 import com.express.model.Express;
 import com.express.model.ExpressShelf;
+import com.express.model.OverDueExpress;
 import com.express.service.ExpressService;
 import com.express.service.ExpressShelfService;
+import com.express.service.OverDueExpressService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -28,6 +33,8 @@ public class ExpressController {
 	ExpressShelfService expressShelfService;
 	@Resource
 	ExpressShelfDao expressShelfDao;
+	@Autowired
+	OverDueExpressService overDueExpressService;
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String toIndex(Model model) {
@@ -41,7 +48,7 @@ public class ExpressController {
 		String contact = request.getParameter("contact");
 		String expressNo = request.getParameter("expressNo");
 		String arriveDate = request.getParameter("arriveDate");
-		List<Express> expresses = expressService.queryExpressInfo(contact, expressNo);
+		List<Express> expresses = expressService.queryExpressInfo(contact, expressNo, null);
 		return expresses;
 	}
 
@@ -65,7 +72,46 @@ public class ExpressController {
 	@RequestMapping(value = "/getExpressList", method = RequestMethod.POST)
 	@ResponseBody
 	public List<Express> getExpressList(@RequestBody Express express) {
-		List<Express> expressList = expressService.queryExpressInfo(express.getContact(), express.getExpressNo());
+		express.setStatus("E");
+		List<Express> expressList = expressService.queryExpressInfo(express.getContact(), express.getExpressNo(),
+				express.getStatus());
+		express.setStatus("O");
+		expressList.addAll(
+				expressService.queryExpressInfo(express.getContact(), express.getExpressNo(), express.getStatus()));
 		return expressList;
+	}
+
+	@RequestMapping(value = "/getExpress", method = RequestMethod.POST)
+	@ResponseBody
+	public Object getExpress(@RequestBody Express express) throws IOException {
+		JSONObject jsonObject = new JSONObject(); // 用于返回位置信息
+		String postCode = express.getVerificationCode(); // 用户传送的验证码
+		String status = express.getStatus();
+		// 判断订单验证码是否正确
+		express = expressService.queryExpressDetail(express);
+		if(expressService.affirmCode(express, postCode)){ // 判断是否通过验证
+			switch (status) { // 根据
+			case "O":
+				// 过期快件处理
+				// 获取OverDueExpress
+				// 根据返回的OverDueExpress对象
+				OverDueExpress overDueExpress = new OverDueExpress();
+				overDueExpress.setExpress(express);
+				overDueExpress = overDueExpressService.queryShelfByParams(overDueExpress);
+				// 删除对应的overDueExpress记录并更新订单
+				jsonObject.put("location", "OverDueShelf");
+				break;
+			case "E":
+				// 当天快件处理
+				ExpressShelf expressShelf = new ExpressShelf();
+				expressShelf.setExpress(express);
+				expressShelf = expressShelfService.queryShelfByParams(expressShelf);
+				jsonObject.put("location", expressShelf.getShelfId());
+				break;
+			default:
+				break;
+			}
+		}
+		return jsonObject;
 	}
 }

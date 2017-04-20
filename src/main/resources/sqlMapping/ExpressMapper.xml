@@ -92,6 +92,9 @@
         <if test="expressNo!=null and  expressNo!=''">
             and express_no=#{expressNo}
         </if>
+        <if test="status!=null">
+            and  express_status=#{status}
+        </if>
     </select>
 
     <select id="getExpressInfoById" resultMap="expressResult">
@@ -106,4 +109,22 @@
     <delete id="deleteExpress">
         DELETE from express.expressinfo WHERE express_no=#{expressNo}
     </delete>
+    
+    <select id="queryExpressDetail" resultMap="expressResult">
+    	SELECT
+        id,express_no, from_date, arrive_date, receive_date, company
+           , consignee, contact, verification_code, address_source, address_dest, express_status
+        FROM express.expressinfo
+        <where>
+        	<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="expressNo != null">
+				and express_no = #{expressNo}
+			</if>
+			<if test="status != null">
+				and express_status = #{status}
+			</if>
+        </where>
+    </select>
 </mapper> 

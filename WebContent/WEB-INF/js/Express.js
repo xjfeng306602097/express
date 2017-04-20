@@ -19,7 +19,6 @@ var Express = {
 						keyboard : true, // 关闭键盘事件
 						remote : "searchModal"
 					}).on('loaded.bs.modal', function () {
-                        setTimeout(function() {
                             var tb = document.createElement("tbody");
                             var table = document
                                 .getElementById("searchResultTable");
@@ -59,13 +58,18 @@ var Express = {
                                 input.className = "btn btn-primary";
                                 input.addEventListener("click", Express.getExpress, false);
                                 input.expressNo = obj.expressNo; // 记录订单号
+                                input.status = obj.status; // 记录状态
                                 tb.rows[index].cells[6].appendChild(input);
+                                var sendMessage = document.createElement("input");
+                                sendMessage.type = "button";
+                                sendMessage.value = "重发短信";
+                                sendMessage.className = "btn btn-success";
+                                sendMessage.expressNo = obj.expressNo; // 记录订单号
+                                sendMessage.style.marginLeft = "10px";
+                                tb.rows[index].cells[6].appendChild(sendMessage);
                                 table.appendChild(tb);
                             });
-                        }, 0);
-                    })
-
-
+                    });
 				}
 			});
 		}
@@ -83,8 +87,51 @@ var Express = {
 			return false;
 		}
 	},
-	getExpress : function(){
-		alert("haha");
-
+	getExpress : function(ev) {
+		var target = ev.target;
+		$('#searchModal').modal('hide');
+		$('#expressModal').modal({
+			show : true, // 显示弹出层
+			backdrop : 'static', // 禁止位置关闭
+			keyboard : true, // 关闭键盘事件
+			remote : "getExpressModal"
+		}).on('loaded.bs.modal', function() {
+			$('#expressNoText').html(target.expressNo);
+			$('#selectExpressNo').val(target.expressNo);
+			$('#expressStatus').val(target.status);
+		}).on('shown.bs.modal', function(){
+			$('#expressNoText').html(target.expressNo);
+			$('#selectExpressNo').val(target.expressNo);
+			$('#expressStatus').val(target.status);
+		});
+	},
+	getMyExpress : function() {
+		var express = {
+				expressNo : $('#selectExpressNo').val(),
+				verificationCode : $('#verificationCode').val(),
+				status : $('#expressStatus').val()
+		};
+		if (express.verificationCode === '' || express.verificationCode.length != 6) {
+			alert("请输入正确格式的验证码");
+			return;
+		}
+		$.ajax({
+			type : "POST",
+			url : "getExpress",
+			contentType : "application/json;chartset=utf-8",
+			dataType : "json",
+			data : JSON.stringify(express),
+			success : function(data){
+				$('#checkExpress').hide(); // 清空列表
+				$('#ensureExpress').show();
+				$('#expressLocation').html(data.location);
+				$('#expressModal').on('hide.bs.modal',function(){
+					$('#checkExpress').show(); // 清空列表
+					$('#expressNoText').html('');
+					$('#verificationCode').val('');
+					$('#ensureExpress').hide();
+				});
+			}
+		});
 	}
 }

@@ -20,7 +20,7 @@ public class OverDueExpressServiceImpl implements OverDueExpressService {
 
 	@Override
 	public OverDueExpress queryShelfByParams(OverDueExpress overDueExpress) {
-		return null;
+		return overDueExpressDao.queryShelfByParams(overDueExpress);
 	}
 
 	@Override

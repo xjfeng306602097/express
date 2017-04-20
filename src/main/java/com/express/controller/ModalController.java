@@ -18,4 +18,9 @@ public class ModalController {
 	public String getExpressSearchModal() {
 		return "modal/searchModal";
 	}
+	
+	@RequestMapping(value = "/getExpressModal", method = RequestMethod.GET)
+	public String getExpressModal() {
+		return "modal/expressModal";
+	}
 }

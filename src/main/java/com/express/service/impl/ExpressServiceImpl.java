@@ -1,21 +1,23 @@
 package com.express.service.impl;
 
-import com.express.dao.ExpressDao;
-import com.express.model.Express;
-import com.express.service.ExpressService;
+import java.io.IOException;
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-import javax.annotation.Resource;
-import java.util.List;
+import com.express.dao.ExpressDao;
+import com.express.model.Express;
+import com.express.service.ExpressService;
+import com.express.util.PropertyUtil;
 
 /**
  * Created by wshibiao on 2017/4/7.
  */
 @Service
 public class ExpressServiceImpl implements ExpressService {
-
-	private static final String SALT = "avadfa%^%#!&#%^fdafafa~@$%^$&&^%&erere}{}*(*&*^";
 
 	@Resource
 	private ExpressDao expressDao;
@@ -27,8 +29,8 @@ public class ExpressServiceImpl implements ExpressService {
 	 * @param expressNo
 	 * @return
 	 */
-	public List<Express> queryExpressInfo(String contact, String expressNo) {
-		return expressDao.queryExpressInfo(contact, expressNo);
+	public List<Express> queryExpressInfo(String contact, String expressNo, String status) {
+		return expressDao.queryExpressInfo(contact, expressNo, status);
 	}
 
 	@Override
@@ -50,19 +52,24 @@ public class ExpressServiceImpl implements ExpressService {
 	public void deleteExpress(Express express) {
 
 	}
+	
+	@Override
+	public Express queryExpressDetail(Express express) {
+		return expressDao.queryExpressDetail(express);
+	}
 
 	/**
 	 * 确认密码是否正确
+	 * @throws IOException 
 	 */
 	@Override
-	public boolean affirmCode(Express express, String verificationCode) {
-		Express queryResult = expressDao.getExpressInfoById(express.getId());
-		String code = DigestUtils.md5DigestAsHex((queryResult.getVerificationCode() + SALT).getBytes()).substring(0, 6);
-		if (verificationCode.equals(express)) {
+	public boolean affirmCode(Express express, String verificationCode) throws IOException {
+		String code = DigestUtils.md5DigestAsHex((express.getVerificationCode() + PropertyUtil.getProperty("Salt")).getBytes()).substring(0, 6);
+		if (verificationCode.equals(code)) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-
+	
 }

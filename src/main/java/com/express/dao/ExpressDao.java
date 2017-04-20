@@ -32,11 +32,18 @@ public interface ExpressDao {
      * @param expressNo
      * @return
      */
-    public List<Express> queryExpressInfo(@Param("contact")String contact, @Param("expressNo")String expressNo);
+    public List<Express> queryExpressInfo(@Param("contact")String contact, @Param("expressNo")String expressNo, @Param("status")String status);
 
     /**
      *删除快递
      * @param expressNo
      */
     public void deleteExpress(@Param("expressNo")String expressNo);
+    
+    /**
+     * 查询单个快件
+     * @param express
+     * @return
+     */
+    public Express queryExpressDetail(Express express);
 }

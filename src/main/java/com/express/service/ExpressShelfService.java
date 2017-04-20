@@ -12,4 +12,6 @@ public interface ExpressShelfService {
     
     void updateExpressShelf(ExpressShelf expressShelf);
     
+    ExpressShelf queryShelfByParams(ExpressShelf expressShelf);
+    
 }
