@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.express.dao.ExpressHistoryDao">
+	<resultMap id="expressHistoryResult" type="com.express.model.ExpressHistory">
+		<id property="historyId" column="history_id" jdbcType="INTEGER"/>
+		<result property="shelfId" column="shelf_id" jdbcType="VARCHAR"/>
+		<result property="createDate" column="create_date" jdbcType="DATE"/>
+		<association property="express" column="expressinfo_id" select="com.express.dao.ExpressDao.getExpressInfoById"/>
+	</resultMap>
+
+	<insert id="insertExpressHistory" useGeneratedKeys="true"
+		keyProperty="historyId">
+		insert into expresshistory(history_id, expressinfo_id, shelf_id, create_date) values
+		(#{historyId},#{express.id},#{shelfId},#{createDate});
+	</insert>
+
+	<select id="queryHistoryByParams" resultMap="expressHistoryResult">
+		select history_id,create_date,shelf_id,expressinfo_id
+		from expresshistory
+		<where>
+			1=1
+			<if test="history_id != 0 and history_id!=null">
+				and history_id = #{historyId}
+			</if>
+			<if test="express!= null">
+				and expressinfo_id = #{express.id}
+			</if>
+			<if test="createDate != null">
+				and create_date = #{createDate}
+			</if>
+			<if test="shelfId != null">
+				and shelf_id = #{shelfId}
+			</if>
+		</where>
+	</select>
+	<select id="queryAllExpressHistory" resultMap="expressHistoryResult">
+		select history_id,create_date,shelf_id,expressinfo_id
+		from expresshistory
+	</select>
+
+</mapper> 
