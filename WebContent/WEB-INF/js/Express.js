@@ -13,62 +13,63 @@ var Express = {
 				dataType : "json",
 				data : JSON.stringify(express),
 				success : function(data) {
+					var result = data;
 					$('#searchModal').modal({
 						show : true, // 显示弹出层
 						backdrop : 'static', // 禁止位置关闭
 						keyboard : true, // 关闭键盘事件
 						remote : "searchModal"
-					}).on('loaded.bs.modal', function () {
-                            var tb = document.createElement("tbody");
-                            var table = document
-                                .getElementById("searchResultTable");
-                            if (tb != null) {
-                                $("tbody").remove();
-                            }
-                            var expresses = [];
-                            $.each(data, function(index, e) {
-                                expresses.push(e);
-                            });
-                            $.each(expresses, function(index, obj) {
-                                tb.insertRow(index);
-                                tb.rows[index].insertCell(0);
-                                var date = new Date(obj.fromDate)
-                                    .toLocaleDateString();
-                                tb.rows[index].cells[0].appendChild(document
-                                    .createTextNode(date));
-                                tb.rows[index].insertCell(1);
-                                tb.rows[index].cells[1].appendChild(document
-                                    .createTextNode(obj.expressNo));
-                                tb.rows[index].insertCell(2);
-                                tb.rows[index].cells[2].appendChild(document
-                                    .createTextNode(obj.company));
-                                tb.rows[index].insertCell(3);
-                                tb.rows[index].cells[3].appendChild(document
-                                    .createTextNode(obj.contact));
-                                tb.rows[index].insertCell(4);
-                                tb.rows[index].cells[4].appendChild(document
-                                    .createTextNode(obj.addressDest));
-                                tb.rows[index].insertCell(5);
-                                tb.rows[index].cells[5].appendChild(document
-                                    .createTextNode(obj.status));
-                                tb.rows[index].insertCell(6);
-                                var input = document.createElement("input");
-                                input.type = "button";
-                                input.value = "取件";
-                                input.className = "btn btn-primary";
-                                input.addEventListener("click", Express.getExpress, false);
-                                input.expressNo = obj.expressNo; // 记录订单号
-                                input.status = obj.status; // 记录状态
-                                tb.rows[index].cells[6].appendChild(input);
-                                var sendMessage = document.createElement("input");
-                                sendMessage.type = "button";
-                                sendMessage.value = "重发短信";
-                                sendMessage.className = "btn btn-success";
-                                sendMessage.expressNo = obj.expressNo; // 记录订单号
-                                sendMessage.style.marginLeft = "10px";
-                                tb.rows[index].cells[6].appendChild(sendMessage);
-                                table.appendChild(tb);
-                            });
+					}).on('shown.bs.modal',function(){
+                        var tb = document.createElement("tbody");
+                        var table = document
+                            .getElementById("searchResultTable");
+                        if (tb != null) {
+                            $("tbody").remove();
+                        }
+                        var expresses = [];
+                        $.each(result, function(index, e) {
+                            expresses.push(e);
+                        });
+                        $.each(expresses, function(index, obj) {
+                            tb.insertRow(index);
+                            tb.rows[index].insertCell(0);
+                            var date = new Date(obj.fromDate)
+                                .toLocaleDateString();
+                            tb.rows[index].cells[0].appendChild(document
+                                .createTextNode(date));
+                            tb.rows[index].insertCell(1);
+                            tb.rows[index].cells[1].appendChild(document
+                                .createTextNode(obj.expressNo));
+                            tb.rows[index].insertCell(2);
+                            tb.rows[index].cells[2].appendChild(document
+                                .createTextNode(obj.company));
+                            tb.rows[index].insertCell(3);
+                            tb.rows[index].cells[3].appendChild(document
+                                .createTextNode(obj.contact));
+                            tb.rows[index].insertCell(4);
+                            tb.rows[index].cells[4].appendChild(document
+                                .createTextNode(obj.addressDest));
+                            tb.rows[index].insertCell(5);
+                            tb.rows[index].cells[5].appendChild(document
+                                .createTextNode(obj.status));
+                            tb.rows[index].insertCell(6);
+                            var input = document.createElement("input");
+                            input.type = "button";
+                            input.value = "取件";
+                            input.className = "btn btn-primary";
+                            input.addEventListener("click", Express.getExpress, false);
+                            input.expressNo = obj.expressNo; // 记录订单号
+                            input.status = obj.status; // 记录状态
+                            tb.rows[index].cells[6].appendChild(input);
+                            var sendMessage = document.createElement("input");
+                            sendMessage.type = "button";
+                            sendMessage.value = "重发短信";
+                            sendMessage.className = "btn btn-success";
+                            sendMessage.expressNo = obj.expressNo; // 记录订单号
+                            sendMessage.style.marginLeft = "10px";
+                            tb.rows[index].cells[6].appendChild(sendMessage);
+                            table.appendChild(tb);
+                        });
                     });
 				}
 			});
