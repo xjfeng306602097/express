@@ -3,6 +3,7 @@ package com.express.timer.impl;
 import com.express.model.Express;
 import com.express.model.OverDueExpress;
 import com.express.service.OverDueExpressService;
+import com.express.service.SendMailService;
 import com.express.service.SmsService;
 import com.express.timer.IExecuteTimer;
 import com.express.util.PropertyUtil;
@@ -24,6 +25,8 @@ import java.util.List;
 public class SendSMSTimer implements IExecuteTimer {
 
 	@Autowired
+	private SendMailService sendMailService;
+	@Autowired
 	private SmsService smsService;
 	@Resource
 	private OverDueExpressService overDueExpressService;
@@ -36,8 +39,6 @@ public class SendSMSTimer implements IExecuteTimer {
 		// 获取隔日件的收件人联系方式
 		String smsContent = "";
 		List<Express> expresses = overDueExpressService.getExpressWithOverDue();
-
-
 	}
 
 	// 每隔3小时
@@ -49,14 +50,16 @@ public class SendSMSTimer implements IExecuteTimer {
 	@Scheduled(cron = "0 0/1 * * * ?")
 	public void sendOverDueMessage() throws IOException {
 		OverDueExpress params = new OverDueExpress();
-		params.setStatus("0");
+		params.setStatus("O");
 		List<OverDueExpress> overDueExpressList = overDueExpressService.queryShelfListByParams(params);
 		for (OverDueExpress overDueExpress : overDueExpressList) {
 			Express express = overDueExpress.getExpress();
 			String contact = express.getContact();// 获取手机号
-			String verificationCode = DigestUtils.md5DigestAsHex((express.getVerificationCode() + PropertyUtil.getProperty("Salt")).getBytes())
+			String verificationCode = DigestUtils
+					.md5DigestAsHex((express.getVerificationCode() + PropertyUtil.getProperty("Salt")).getBytes())
 					.substring(0, 6); // 获取验证码
-			smsService.sendMessage(contact, "Your vertificationConde is " + verificationCode);
+			express.setVerificationCode(verificationCode);
+			sendMailService.sendVertificationCodeByEmail(express);
 		}
 	}
 }
