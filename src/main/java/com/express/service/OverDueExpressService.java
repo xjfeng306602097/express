@@ -25,4 +25,6 @@ public interface OverDueExpressService {
      */
     public List<OverDueExpress> queryShelfListByParams(OverDueExpress overDueExpress);
     
+    
+    public void updateOverDueExpressShelf(OverDueExpress overDueExpress);
 }

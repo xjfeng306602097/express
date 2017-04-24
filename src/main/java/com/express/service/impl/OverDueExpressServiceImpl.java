@@ -1,14 +1,17 @@
 package com.express.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.express.dao.OverDueExpressDao;
 import com.express.model.Express;
 import com.express.model.OverDueExpress;
 import com.express.service.OverDueExpressService;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by wshibiao on 2017/4/8.
@@ -41,4 +44,11 @@ public class OverDueExpressServiceImpl implements OverDueExpressService {
 	public List<OverDueExpress> queryShelfListByParams(OverDueExpress overDueExpress) {
 		return overDueExpressDao.queryShelfListByParams(overDueExpress);
 	}
+	
+	@Transactional
+	@Override
+	public void updateOverDueExpressShelf(OverDueExpress overDueExpress) {
+		overDueExpressDao.updateOverDueExpressShelf(overDueExpress);
+	}
+	
 }
