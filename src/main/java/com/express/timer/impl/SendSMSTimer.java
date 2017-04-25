@@ -1,5 +1,18 @@
 package com.express.timer.impl;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+import org.springframework.util.DigestUtils;
+
 import com.express.model.Express;
 import com.express.model.ExpressShelf;
 import com.express.model.OverDueExpress;
@@ -10,18 +23,6 @@ import com.express.service.SendMailService;
 import com.express.service.SmsService;
 import com.express.timer.IExecuteTimer;
 import com.express.util.PropertyUtil;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-import org.springframework.util.DigestUtils;
-
-import javax.annotation.Resource;
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by wshibiao on 2017/4/6.
