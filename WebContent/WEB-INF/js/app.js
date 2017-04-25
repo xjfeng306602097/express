@@ -1,6 +1,7 @@
 /**
  * Created by wshibiao on 2017/4/22.
  */
+
 Date.prototype.Format = function (fmt) {
     //在不引入日期控件情况下，采用此方法格式化日期为yyyy-mm-dd，否则更新快件信息时弹出框不能获取快件日期
     const o = {
@@ -16,7 +17,7 @@ Date.prototype.Format = function (fmt) {
     for (const k in o)
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
-}
+};
 const admin= {
     route:function () {
         /* 创建组件构造器  */
@@ -45,11 +46,9 @@ const admin= {
                     this.$http.post("getExpress", this.express).then(function (response) {
                         // this.$set(this.expresses,response.data)
                         response.data.forEach(function (item) {
-                            const fromDate = new Date(item.fromDate).toLocaleDateString();
-                            item.fromDate = fromDate;
-                            const arriveDate = new Date(item.arriveDate).toLocaleDateString();
-                            item.arriveDate = arriveDate;
-                            item.receiveDate=(item.receiveDate!=null)?new Date(item.receiveDate).toLocaleDateString():"";
+                            item.fromDate = new Date(item.fromDate).Format('yyyy-MM-dd');
+                            item.arriveDate = new Date(item.arriveDate).Format('yyyy-MM-dd');
+                            item.receiveDate=(item.receiveDate!=null)?new Date(item.receiveDate).Format('yyyy-MM-dd'):"";
                         });
                         this.isShow=true;
                         this.expresses = response.data
@@ -59,9 +58,9 @@ const admin= {
                 },
                 //修改快递模态框
                 openModal: function (e) {
-                    // const code = document.getElementById("val-code").value;
                     e.fromDate=(new Date(e.fromDate)).Format('yyyy-MM-dd');
                     e.arriveDate=(new Date(e.arriveDate)).Format('yyyy-MM-dd');
+                    e.arriveDate=(e.arriveDate!=null)?(new Date(e.arriveDate)).Format('yyyy-MM-dd'):"";
                     this.upExpress=e;
                     $('#updateModal').modal('show');
                     // alert(this.$refs.menuItem[index]);
@@ -104,6 +103,16 @@ const admin= {
                         $('#updateModal').modal('hide');
                     }).catch(function (response) {
                         alert("error")
+                    })
+                },
+                notification:function (e) {
+                    e.fromDate=(new Date(e.fromDate)).Format('yyyy-MM-dd');
+                    e.arriveDate=(new Date(e.arriveDate)).Format('yyyy-MM-dd');
+                    e.arriveDate=(e.arriveDate!=null)?(new Date(e.arriveDate)).Format('yyyy-MM-dd'):"";
+                    this.$http.post("sendMail",e).then(function (response) {
+                        alert("success");
+                    }).catch(function (response) {
+                        alert("error");
                     })
                 }
             }

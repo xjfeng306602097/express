@@ -5,6 +5,7 @@ import com.express.model.ExpressShelf;
 import com.express.model.User;
 import com.express.service.ExpressService;
 import com.express.service.ExpressShelfService;
+import com.express.service.SendMailService;
 import com.express.service.UserService;
 import com.express.util.PropertyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ public class UserController {
     ExpressService expressService;
     @Autowired
     ExpressShelfService expressShelfService;
+    @Autowired
+    SendMailService sendMailService;
 
     /**
      * 登录页面
@@ -107,5 +110,26 @@ public class UserController {
         List<Express> list=new ArrayList<>();
         list.add(express);
         return list;
+    }
+    /**
+     * 更新快件信息
+     * @param express
+     * @return
+     * @throws IOException
+     */
+    @ResponseBody
+    @RequestMapping(value = "/sendMail",method = RequestMethod.POST)
+    public String notification(@RequestBody Express express) throws IOException{
+        String verificationCode = DigestUtils
+                .md5DigestAsHex((express.getVerificationCode() + PropertyUtil.getProperty("Salt")).getBytes())
+                .substring(0, 6); // 获取验证码
+        express.setVerificationCode(verificationCode);
+        try {
+            sendMailService.sendVertificationCodeByEmail(express);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "error";
+        }
+        return "success";
     }
 }
