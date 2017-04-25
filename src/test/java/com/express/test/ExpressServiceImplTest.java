@@ -1,24 +1,23 @@
 package com.express.test;
 
-import java.util.List;
-
+import com.express.model.Express;
+import com.express.service.ExpressService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.express.model.Express;
-import com.express.service.ExpressService;
+import java.util.List;
 
 
 /**
  * Created by wshibiao on 2017/4/7.
  */
-public class ExpressServiceImplTest {
+public class ExpressServiceImplTest extends BaseTestCase {
     @Autowired
     private ExpressService expressService;
 
     @Test
     public void queryExpressInfo() throws Exception {
-        List<Express> expresses=expressService.queryExpressInfo("b2",null);
+        List<Express> expresses=expressService.queryExpressInfo("b2",null,"");
         Express express1=expressService.getExpressInfoById(new Long(1));
         for (Express express :
                 expresses) {
@@ -42,6 +41,14 @@ public class ExpressServiceImplTest {
         express1.setAddressSource("c3");
         express1.setCompany("eee4");
         expressService.updateExpress(express1);
+    }
+    
+    @Test
+    public void testQueryExpress(){
+    	Express express = new Express();
+    	express.setStatus("E");
+    	Express result = expressService.queryExpressDetail(express);
+    	System.out.println(express.toString());
     }
 
 }

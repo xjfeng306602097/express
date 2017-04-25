@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>  
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.express.dao.ExpressDao">
 	<resultMap type="com.express.model.Express" id="expressResult">
 		<id property="id" column="id" jdbcType="INTEGER" />
@@ -12,16 +12,16 @@
 		<result property="consignee" column="consignee" jdbcType="VARCHAR" />
 		<result property="contact" column="contact" jdbcType="VARCHAR" />
 		<result property="verificationCode" column="verification_code"
-			jdbcType="VARCHAR" />
+				jdbcType="VARCHAR" />
 		<result property="addressSource" column="address_source"
-			jdbcType="VARCHAR" />
+				jdbcType="VARCHAR" />
 		<result property="addressDest" column="address_dest" jdbcType="VARCHAR" />
 		<result property="status" column="express_status" jdbcType="VARCHAR" />
 		<result property="emailAddress" column="email_address" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<insert id="insertExpressInfo" useGeneratedKeys="true"
-		keyProperty="id">
+			keyProperty="id">
 		INSERT INTO express.expressinfo(id,express_no, from_date,
 		arrive_date,
 		receive_date, company
@@ -110,6 +110,7 @@
 		<if test="status!=null">
 			and express_status=#{status}
 		</if>
+		order by arrive_date desc
 	</select>
 
 	<select id="getExpressInfoById" resultMap="expressResult">
@@ -148,5 +149,26 @@
 				and express_status = #{status}
 			</if>
 		</where>
+	</select>
+	
+	<select id="queryExpressInfoOrderByDate" resultMap="expressResult">
+		SELECT
+		id,express_no, from_date, arrive_date, receive_date, company
+		,
+		consignee, contact, verification_code, address_source, address_dest,
+		express_status, email_address
+		FROM express.expressinfo
+		where
+		1=1
+		<if test="contact!=null and contact!=''">
+			and contact=#{contact}
+		</if>
+		<if test="expressNo!=null and expressNo!=''">
+			and express_no=#{expressNo}
+		</if>
+		<if test="status!=null">
+			and express_status=#{status}
+		</if>
+		order by arrive_date
 	</select>
 </mapper> 
