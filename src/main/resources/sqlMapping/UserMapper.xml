@@ -1,5 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>  
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.express.dao.UserDao">
-</mapper> 
+    <resultMap id="userResult" type="com.express.model.User">
+        <id property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="createUser" useGeneratedKeys="true"
+            keyProperty="user_id">
+        INSERT INTO express.users(user_id,user_name,password) VALUES (#{userId},#{userName},#{password})
+    </insert>
+
+    <update id="updateUserInfo">
+        UPDATE
+        express.users
+        <set>
+            <if test="userName!=null">
+                user_name=userName
+            </if>
+            <if test="password!=null">
+                password=password
+            </if>
+        </set>
+    </update>
+
+    <select id="getUser" resultMap="userResult">
+        SELECT user_id,user_name,password from express.users
+        where user_id=#{userId}
+
+    </select>
+</mapper>

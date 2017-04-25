@@ -1,12 +1,11 @@
 package com.express.test;
 
-import java.util.List;
-
+import com.express.model.Express;
+import com.express.service.ExpressService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.express.model.Express;
-import com.express.service.ExpressService;
+import java.util.List;
 
 
 /**
@@ -18,7 +17,7 @@ public class ExpressServiceImplTest {
 
     @Test
     public void queryExpressInfo() throws Exception {
-        List<Express> expresses=expressService.queryExpressInfo("b2",null);
+        List<Express> expresses=expressService.queryExpressInfo("b2",null,"");
         Express express1=expressService.getExpressInfoById(new Long(1));
         for (Express express :
                 expresses) {
