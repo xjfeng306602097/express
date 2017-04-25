@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class ClearShelfTimer implements IExecuteTimer {
 	@Autowired
 	private ExpressShelfService expressShelfService;
+	
 	// 每天凌晨12点00分00秒清除
 	@Scheduled(cron = "0 0 0 * * ?")
 	@Override

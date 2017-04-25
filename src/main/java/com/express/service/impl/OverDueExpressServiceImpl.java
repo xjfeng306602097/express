@@ -29,7 +29,9 @@ public class OverDueExpressServiceImpl implements OverDueExpressService {
 	@Override
 	public List<Express> getExpressWithOverDue() {
 		// 获取所有隔日件
-		List<OverDueExpress> overDueExpresses = overDueExpressDao.queryALLShelf();
+		OverDueExpress params = new OverDueExpress();
+		params.setStatus("O");
+		List<OverDueExpress> overDueExpresses = overDueExpressDao.queryShelfListByParams(params);
 		// 获取所有联系方式
 		List<Express> expresses = new ArrayList<Express>();
 		if (overDueExpresses.size() > 0) {

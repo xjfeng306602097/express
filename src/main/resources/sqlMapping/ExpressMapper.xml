@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -150,25 +151,3 @@
 			</if>
 		</where>
 	</select>
-	
-	<select id="queryExpressInfoOrderByDate" resultMap="expressResult">
-		SELECT
-		id,express_no, from_date, arrive_date, receive_date, company
-		,
-		consignee, contact, verification_code, address_source, address_dest,
-		express_status, email_address
-		FROM express.expressinfo
-		where
-		1=1
-		<if test="contact!=null and contact!=''">
-			and contact=#{contact}
-		</if>
-		<if test="expressNo!=null and expressNo!=''">
-			and express_no=#{expressNo}
-		</if>
-		<if test="status!=null">
-			and express_status=#{status}
-		</if>
-		order by arrive_date
-	</select>
-</mapper> 

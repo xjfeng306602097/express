@@ -23,8 +23,23 @@ public interface ExpressShelfDao {
      *查询货架上的所有快递
      */
     public List<ExpressShelf> queryAllShelfExpress();
-    
+    /**
+     * 更新货柜
+     * @param expressShelf
+     */
     public void updateExpressShelf(ExpressShelf expressShelf);
-
+    
+    /**
+     * 查询特定货柜
+     * @param expressShelf
+     * @return
+     */
     public ExpressShelf queryShelfByParams(ExpressShelf expressShelf);
+    
+    /**
+     * 根据特定条件查出list
+     * @param expressShelf
+     * @return
+     */
+    public List<ExpressShelf> queryShelfListByParams(ExpressShelf expressShelf);
 }

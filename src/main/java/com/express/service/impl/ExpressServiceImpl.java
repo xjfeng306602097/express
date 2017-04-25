@@ -73,5 +73,10 @@ public class ExpressServiceImpl implements ExpressService {
 			return false;
 		}
 	}
+
+	@Override
+	public List<Express> queryExpressInfoOrderByDate(String contact, String expressNo, String status) {
+		return expressDao.queryExpressInfoOrderByDate(contact, expressNo, status);
+	}
 	
 }

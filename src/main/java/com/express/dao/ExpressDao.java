@@ -46,4 +46,13 @@ public interface ExpressDao {
      * @return
      */
     public Express queryExpressDetail(Express express);
+    
+    /**
+     * 查询快件列表，并升序排序
+     * @param contact
+     * @param expressNo
+     * @param status
+     * @return
+     */
+    public List<Express> queryExpressInfoOrderByDate(@Param("contact")String contact, @Param("expressNo")String expressNo, @Param("status")String status);
 }

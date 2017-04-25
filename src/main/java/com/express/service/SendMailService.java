@@ -6,5 +6,6 @@ import com.express.model.Express;
 public interface SendMailService {
 
 	void sendVertificationCodeByEmail(Express express) throws IOException;
-
+	
+	void sendGetExpressSuccessEmail(Express express) throws IOException;
 }

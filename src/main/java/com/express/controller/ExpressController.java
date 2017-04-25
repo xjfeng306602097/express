@@ -26,6 +26,7 @@ import com.express.service.ExpressHistoryService;
 import com.express.service.ExpressService;
 import com.express.service.ExpressShelfService;
 import com.express.service.OverDueExpressService;
+import com.express.service.SendMailService;
 
 @Controller
 @RequestMapping("/express")
@@ -40,6 +41,8 @@ public class ExpressController {
 	OverDueExpressService overDueExpressService;
 	@Autowired
 	ExpressHistoryService expressHistoryService;
+	@Autowired
+	SendMailService sendMailService;
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String toIndex(Model model) {
@@ -139,6 +142,7 @@ public class ExpressController {
 			default:
 				break;
 			}
+			sendMailService.sendGetExpressSuccessEmail(express);
 		}
 		return jsonObject;
 	}
