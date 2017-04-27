@@ -63,10 +63,6 @@ public class ExpressShelfServiceImpl implements ExpressShelfService {
 		return expressShelfDao.queryShelfByParams(expressShelf);
 	}
 
-	@Override
-	public List<ExpressShelf> queryShelfsByParams(ExpressShelf expressShelf) {
-		return expressShelfDao.queryShelfsByParams(expressShelf);
-	}
 
 	@Override
 	public ExpressShelf queryUnusedShelf() {

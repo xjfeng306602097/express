@@ -68,15 +68,21 @@ public class UserController {
         // }
         return expressList;
     }
+
+    /**
+     * 快件维护页面查询货柜信息
+     * @param express
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/getShelf",method = RequestMethod.POST)
     public ExpressShelf getShelf(@RequestBody Express express){
-        ExpressShelf expressShelf = new ExpressShelf();
-        List<Express> expresses=new ArrayList<>();
-        expresses  = expressService.queryExpressInfo(express);
-        if (expresses.size()>0) {
-            expressShelf.setExpress(expresses.get(0));
-            expressShelf=expressShelfService.queryShelfByParams(expressShelf);
+        List<ExpressShelf> expressShelves = new ArrayList<>();
+        ExpressShelf expressShelf=new ExpressShelf();
+        expressShelf.setExpress(express);
+        expressShelves=expressShelfService.queryShelfListByParams(expressShelf);
+        if (expressShelves.size()>0) {
+            expressShelf=expressShelves.get(0);
         }
         return expressShelf;
     }
@@ -90,12 +96,15 @@ public class UserController {
     @RequestMapping(value = "/getShelfList",method = RequestMethod.POST)
     public List<ExpressShelf> getShelfList(@RequestBody ExpressShelf expressShelf){
         List<ExpressShelf> expressShelves=new ArrayList<>();
-        expressShelves=expressShelfService.queryShelfsByParams(expressShelf);
-        for(ExpressShelf expressShelf1:expressShelves){
-
-        }
+        expressShelves=expressShelfService.queryShelfListByParams(expressShelf);
         return expressShelves;
     }
+
+    /**
+     * 放入货柜
+     * @param express
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/putIntoShelf",method = RequestMethod.POST)
     public ExpressShelf getShelfList(@RequestBody Express express){

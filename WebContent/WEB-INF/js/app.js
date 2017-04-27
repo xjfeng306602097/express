@@ -28,6 +28,7 @@ const admin= {
             template: '#about',
 
         };
+        //查询快件组件
         const Express = {
             template: '#query-template',
             data: function () {
@@ -38,13 +39,14 @@ const admin= {
                     upExpress: {},
                     expresses:[],
                     shelf:{},
+                    tempExpress:{},
+                    shelfList:[],
                 }
             },
             methods: {
                 //查询快件
                 getExpressList: function () {
                     this.$http.post("getExpress", this.express).then(function (response) {
-                        // this.$set(this.expresses,response.data)
                         response.data.forEach(function (item) {
                             item.fromDate = new Date(item.fromDate).Format('yyyy-MM-dd');
                             item.arriveDate = new Date(item.arriveDate).Format('yyyy-MM-dd');
@@ -58,13 +60,36 @@ const admin= {
                 },
                 //修改快递模态框
                 openModal: function (e) {
+
                     e.fromDate=(new Date(e.fromDate)).Format('yyyy-MM-dd');
                     e.arriveDate=(new Date(e.arriveDate)).Format('yyyy-MM-dd');
                     e.arriveDate=(e.arriveDate!=null)?(new Date(e.arriveDate)).Format('yyyy-MM-dd'):"";
                     this.upExpress=e;
                     $('#updateModal').modal('show');
-                    // alert(this.$refs.menuItem[index]);
+                },
+                showShelfLocation: function (e) {
+                    e.fromDate=(new Date(e.fromDate)).Format('yyyy-MM-dd');
+                    e.arriveDate=(new Date(e.arriveDate)).Format('yyyy-MM-dd');
+                    e.arriveDate=(e.arriveDate!=null)?(new Date(e.arriveDate)).Format('yyyy-MM-dd'):"";
+                    this.tempExpress=e;
+                    this.$http.post('getShelf',e).then(function (response) {
+                        this.shelf=response.data;
+                        $('#shelfLocation').modal('show');
+                    }).catch(function (response) {
+                        alert(response.data);
+                    });
+                },
+                putIntoShelf: function () {
+                    this.$http.post('putIntoShelf',this.tempExpress).then(function (response) {
+                        // this.shelfList=response.data;
+                        $('#shelfLocation').modal('hide');
+                        this.shelf=response.data;
+                        $('#responseLocation').modal('show');
+                        // $('#shelfList').modal('show');
 
+                    }).catch(function (response) {
+                        alert(response.data);
+                    });
                 },
                 //录入快递模态框
                 createModal: function () {
@@ -108,7 +133,7 @@ const admin= {
                 notification:function (e) {
                     e.fromDate=(new Date(e.fromDate)).Format('yyyy-MM-dd');
                     e.arriveDate=(new Date(e.arriveDate)).Format('yyyy-MM-dd');
-                    e.arriveDate=(e.arriveDate!=null)?(new Date(e.arriveDate)).Format('yyyy-MM-dd'):"";
+                    e.receiveDate=(e.receiveDate!=null)?(new Date(e.receiveDate)).Format('yyyy-MM-dd'):"";
                     this.$http.post("sendMail",e).then(function (response) {
                         alert("success");
                     }).catch(function (response) {
@@ -116,13 +141,47 @@ const admin= {
                     })
                 }
             }
+        };
+        // 当日货柜管理
+        const Shelf={
+            template:'#query-shelf',
+            data:function(){
+                return {
+                    isShow:false,
+                    shelf: {},
+                    shelfList: [],
+                    express:{}
+                };
+            },
+            methods:{
+                showExpress:function (s) {
+                    s.fromDate=(new Date(s.fromDate)).Format('yyyy-MM-dd');
+                    s.arriveDate=(new Date(s.arriveDate)).Format('yyyy-MM-dd');
+                    s.receiveDate=(s.receiveDate!=null)?(new Date(s.receiveDate)).Format('yyyy-MM-dd'):"";
+                    this.express=s;
+                    $('#expressTable').modal('show');
+                },
+                getShelfList:function () {
+                    this.$http.post("getShelfList",this.shelf).then(function (response) {
+                        response.data.forEach(function (item) {
+                            item.createDate=(item.createDate !=null)? (new Date(item.createDate).Format('yyyy-MM-dd')):"";
+                        });
+                        this.shelfList=response.data;
+                        this.isShow="true";
+                    }).catch(function (response) {
 
+                    });
+                },
+                moveExpress:{
+
+                }
+            }
         };
         /* 创建路由映射  */
         const routes = [
             {path: '/home', component: Home},
             {path: '/today', component: Express},
-            {path: '/new', component: About}
+            {path: '/shelf', component: Shelf}
 
         ];
         /* 创建路由器  */

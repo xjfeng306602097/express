@@ -58,10 +58,15 @@
 			</if>
 		</where>
 	</select>
-
 	<select id="queryAllShelfExpress" resultMap="expressShelfResult">
 		select shelf_id,expressinfo_id,create_date,shelf_status
 		from expressshelf
+	</select>
+	<select id="queryUnusedShelf" resultMap="expressShelfResult">
+		select shelf_id,expressinfo_id,create_date,shelf_status
+		from expressshelf
+		where shelf_status='N'
+		 limit 1
 	</select>
 
 	<select id="queryShelfListByParams" resultMap="expressShelfResult">

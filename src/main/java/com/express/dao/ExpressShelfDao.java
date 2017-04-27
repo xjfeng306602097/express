@@ -35,7 +35,11 @@ public interface ExpressShelfDao {
      * @return
      */
     public ExpressShelf queryShelfByParams(ExpressShelf expressShelf);
-    public List<ExpressShelf> queryShelfsByParams(ExpressShelf expressShelf);
+
+    /**
+     * 查找未使用的货柜
+     * @return
+     */
     public ExpressShelf queryUnusedShelf();
 
     /**

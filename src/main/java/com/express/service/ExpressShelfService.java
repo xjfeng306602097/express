@@ -15,7 +15,7 @@ public interface ExpressShelfService {
     void updateExpressShelf(ExpressShelf expressShelf);
     
     ExpressShelf queryShelfByParams(ExpressShelf expressShelf);
-    List<ExpressShelf> queryShelfsByParams(ExpressShelf expressShelf);
+
     ExpressShelf queryUnusedShelf();
 
 
