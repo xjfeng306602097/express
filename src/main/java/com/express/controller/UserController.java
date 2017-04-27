@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -50,13 +51,64 @@ public class UserController {
     @ResponseBody
     @RequestMapping(value = "/getExpress",method = RequestMethod.POST)
     public List<Express> getExpress(@RequestBody Express express){
-        List<Express> expressList = expressService.queryExpressInfo(express.getContact(), express.getExpressNo(),express.getStatus());
-        return  expressList;
+        List<Express> expressList =new ArrayList<>();
+        expressList  = expressService.queryExpressInfo(express);
+        // if (expressList.size()>0) {
+        //     for (int i = 0; i < expressList.size(); i++) {
+        //         ExpressExpose expressExpose = new ExpressExpose();
+        //         expressExpose.setExpress(expressList.get(i));
+        //         ExpressShelf expressShelf = new ExpressShelf();
+        //         expressShelf.setExpress(expressList.get(i));
+        //         expressShelf = expressShelfService.queryShelfByParams(expressShelf);
+        //         if (expressShelf!=null) {
+        //             expressExpose.setShelfId(expressShelf.getShelfId());
+        //         }
+        //         expressExposes.add(expressExpose);
+        //     }
+        // }
+        return expressList;
     }
     @ResponseBody
     @RequestMapping(value = "/getShelf",method = RequestMethod.POST)
-    public ExpressShelf getExpress(@RequestBody String code){
-        return  new ExpressShelf();
+    public ExpressShelf getShelf(@RequestBody Express express){
+        ExpressShelf expressShelf = new ExpressShelf();
+        List<Express> expresses=new ArrayList<>();
+        expresses  = expressService.queryExpressInfo(express);
+        if (expresses.size()>0) {
+            expressShelf.setExpress(expresses.get(0));
+            expressShelf=expressShelfService.queryShelfByParams(expressShelf);
+        }
+        return expressShelf;
+    }
+
+    /**
+     * 货柜维护页面查询货柜列表
+     * @param expressShelf
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getShelfList",method = RequestMethod.POST)
+    public List<ExpressShelf> getShelfList(@RequestBody ExpressShelf expressShelf){
+        List<ExpressShelf> expressShelves=new ArrayList<>();
+        expressShelves=expressShelfService.queryShelfsByParams(expressShelf);
+        for(ExpressShelf expressShelf1:expressShelves){
+
+        }
+        return expressShelves;
+    }
+    @ResponseBody
+    @RequestMapping(value = "/putIntoShelf",method = RequestMethod.POST)
+    public ExpressShelf getShelfList(@RequestBody Express express){
+        ExpressShelf expressShelf =expressShelfService.queryUnusedShelf();
+        if (expressShelf!=null) {
+            expressShelf.setExpress(express);
+            expressShelf.setShelfStatus("E");
+            expressShelf.setCreateDate(new Date());
+            expressShelfService.updateExpressShelf(expressShelf);
+            express.setStatus("W");
+            expressService.updateExpress(express);
+        }
+        return expressShelf;
     }
     @ResponseBody
     @RequestMapping(value = "/login",method = RequestMethod.POST)

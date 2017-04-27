@@ -58,14 +58,14 @@
 			</if>
 		</where>
 	</select>
-	
+
 	<select id="queryAllShelfExpress" resultMap="expressShelfResult">
 		select shelf_id,expressinfo_id,create_date,shelf_status
 		from expressshelf
 	</select>
-	
+
 	<select id="queryShelfListByParams" resultMap="expressShelfResult">
-		select 
+		select
 		shelf_id,expressinfo_id,create_date,shelf_status
 		from
 		expressshelf

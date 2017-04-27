@@ -1,8 +1,8 @@
 package com.express.service;
 
-import java.util.List;
-
 import com.express.model.ExpressShelf;
+
+import java.util.List;
 
 /**
  * Created by wshibiao on 2017/4/7.
@@ -15,6 +15,9 @@ public interface ExpressShelfService {
     void updateExpressShelf(ExpressShelf expressShelf);
     
     ExpressShelf queryShelfByParams(ExpressShelf expressShelf);
-    
+    List<ExpressShelf> queryShelfsByParams(ExpressShelf expressShelf);
+    ExpressShelf queryUnusedShelf();
+
+
     List<ExpressShelf> queryShelfListByParams(ExpressShelf expressShelf);
 }

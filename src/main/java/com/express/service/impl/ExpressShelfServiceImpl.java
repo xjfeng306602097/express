@@ -64,6 +64,16 @@ public class ExpressShelfServiceImpl implements ExpressShelfService {
 	}
 
 	@Override
+	public List<ExpressShelf> queryShelfsByParams(ExpressShelf expressShelf) {
+		return expressShelfDao.queryShelfsByParams(expressShelf);
+	}
+
+	@Override
+	public ExpressShelf queryUnusedShelf() {
+		return expressShelfDao.queryUnusedShelf();
+	}
+
+	@Override
 	public List<ExpressShelf> queryShelfListByParams(ExpressShelf expressShelf) {
 		return expressShelfDao.queryShelfListByParams(expressShelf);
 	}
