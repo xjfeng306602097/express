@@ -6,10 +6,7 @@ import com.express.model.Express;
 import com.express.model.ExpressHistory;
 import com.express.model.ExpressShelf;
 import com.express.model.OverDueExpress;
-import com.express.service.ExpressHistoryService;
-import com.express.service.ExpressService;
-import com.express.service.ExpressShelfService;
-import com.express.service.OverDueExpressService;
+import com.express.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,6 +35,8 @@ public class ExpressController {
 	OverDueExpressService overDueExpressService;
 	@Autowired
 	ExpressHistoryService expressHistoryService;
+	@Autowired
+	SendMailService sendMailService;
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String toIndex(Model model) {

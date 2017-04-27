@@ -1,18 +1,16 @@
 package com.express.service.impl;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-
-import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
-
 import com.express.dao.ExpressDao;
 import com.express.model.Express;
 import com.express.service.ExpressService;
 import com.express.util.PropertyUtil;
+import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
+
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by wshibiao on 2017/4/7.
@@ -25,13 +23,12 @@ public class ExpressServiceImpl implements ExpressService {
 
 	/**
 	 * 查询快递的信息
-	 * 
-	 * @param contact
-	 * @param expressNo
+	 *
+	 * @param express
 	 * @return
 	 */
-	public List<Express> queryExpressInfo(String contact, String expressNo, String status) {
-		return expressDao.queryExpressInfo(contact, expressNo, status);
+	public List<Express> queryExpressInfo(Express express) {
+		return expressDao.queryExpressInfo(express);
 	}
 
 	@Override

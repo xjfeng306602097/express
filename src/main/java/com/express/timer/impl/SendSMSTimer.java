@@ -1,11 +1,11 @@
 package com.express.timer.impl;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.express.model.Express;
+import com.express.model.ExpressShelf;
+import com.express.model.OverDueExpress;
+import com.express.service.*;
+import com.express.timer.IExecuteTimer;
+import com.express.util.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +13,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 
-import com.express.model.Express;
-import com.express.model.ExpressShelf;
-import com.express.model.OverDueExpress;
-import com.express.service.ExpressService;
-import com.express.service.ExpressShelfService;
-import com.express.service.OverDueExpressService;
-import com.express.service.SendMailService;
-import com.express.service.SmsService;
-import com.express.timer.IExecuteTimer;
-import com.express.util.PropertyUtil;
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by wshibiao on 2017/4/6.
@@ -66,7 +60,9 @@ public class SendSMSTimer implements IExecuteTimer {
 		ExpressShelf params = new ExpressShelf();
 		params.setShelfStatus("N");
 		List<ExpressShelf> expressShelfList = expressShelfService.queryShelfListByParams(params);
-		List<Express> expressList = expressService.queryExpressInfo(null, null, "N");
+		Express expressTemp=new Express();
+		expressTemp.setStatus("N");
+		List<Express> expressList = expressService.queryExpressInfo(expressTemp);
 		for (int i = 0; i < expressShelfList.size(); i++) {
 			if (i < expressList.size()) {
 				Express express = expressList.get(i);
