@@ -101,13 +101,25 @@
 		FROM express.expressinfo
 		where
 		1=1
-		<if test="contact!=null and  contact!=''">
-			and contact=#{contact}
+		<if test="fromDate!=null and fromDate!=''">
+			and from_date=#{fromDate}
+		</if>
+		<if test="arriveDate!=null and arriveDate!=''">
+			and arrive_date=#{arriveDate}
 		</if>
 		<if test="expressNo!=null and  expressNo!=''">
 			and express_no=#{expressNo}
 		</if>
-		<if test="status!=null">
+		<if test="company!=null and company!=''">
+			and company=#{company}
+		</if>
+		<if test="consignee!=null and consignee!=''">
+			and consignee=#{consignee}
+		</if>
+		<if test="contact!=null and contact!=''">
+			and contact=#{contact}
+		</if>
+		<if test="status!=null and status!=''">
 			and express_status=#{status}
 		</if>
 		order by arrive_date desc

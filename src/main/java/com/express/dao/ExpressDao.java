@@ -28,11 +28,10 @@ public interface ExpressDao {
     public Express getExpressInfoById(@Param("id") Long id);
     /**
      * 通过手机号和快递号查询快递的信息
-     * @param contact
-     * @param expressNo
+     * @param express
      * @return
      */
-    public List<Express> queryExpressInfo(@Param("contact")String contact, @Param("expressNo")String expressNo, @Param("status")String status);
+    public List<Express> queryExpressInfo(Express express);
 
     /**
      *删除快递

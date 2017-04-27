@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ExpressService {
 
-	public List<Express> queryExpressInfo(String contact, String expressNo, String status);
+	public List<Express> queryExpressInfo(Express express);
 
 	public Express getExpressInfoById(Long id);
 
