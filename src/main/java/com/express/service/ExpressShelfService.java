@@ -1,5 +1,7 @@
 package com.express.service;
 
+import java.util.List;
+
 import com.express.model.ExpressShelf;
 
 /**
@@ -14,4 +16,5 @@ public interface ExpressShelfService {
     
     ExpressShelf queryShelfByParams(ExpressShelf expressShelf);
     
+    List<ExpressShelf> queryShelfListByParams(ExpressShelf expressShelf);
 }

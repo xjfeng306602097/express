@@ -58,9 +58,31 @@
 			</if>
 		</where>
 	</select>
+	
 	<select id="queryAllShelfExpress" resultMap="expressShelfResult">
 		select shelf_id,expressinfo_id,create_date,shelf_status
 		from expressshelf
+	</select>
+	
+	<select id="queryShelfListByParams" resultMap="expressShelfResult">
+		select 
+		shelf_id,expressinfo_id,create_date,shelf_status
+		from
+		expressshelf
+		<where>
+			<if test="shelfId != 0 and shelfId!=null">
+				shelf_id = #{shelfId}
+			</if>
+			<if test="express != null">
+				and expressinfo_id = #{express.id}
+			</if>
+			<if test="createDate != null">
+				and create_date = #{createDate}
+			</if>
+			<if test="shelfStatus != null">
+				and shelf_status = #{shelfStatus}
+			</if>
+		</where>
 	</select>
 
 </mapper> 

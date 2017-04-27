@@ -126,6 +126,7 @@ public class ExpressController {
 			default:
 				break;
 			}
+			sendMailService.sendGetExpressSuccessEmail(express);
 		}
 		return jsonObject;
 	}

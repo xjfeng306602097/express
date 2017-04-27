@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class OverDueExpress {
 	
-	private int overDueShelfId;
+	private Long overDueShelfId;
 
 	private Express express;
 
@@ -12,11 +12,11 @@ public class OverDueExpress {
 
 	private String status;
 
-	public int getOverDueShelfId() {
+	public Long getOverDueShelfId() {
 		return overDueShelfId;
 	}
 
-	public void setOverDueShelfId(int overDueShelfId) {
+	public void setOverDueShelfId(Long overDueShelfId) {
 		this.overDueShelfId = overDueShelfId;
 	}
 

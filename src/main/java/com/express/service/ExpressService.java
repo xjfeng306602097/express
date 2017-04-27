@@ -20,4 +20,6 @@ public interface ExpressService {
 	boolean affirmCode(Express express, String verificationCode) throws IOException;
 	
 	public Express queryExpressDetail(Express express);
+	
+	public List<Express> queryExpressInfoOrderByDate(String contact, String expressNo, String status);
 }

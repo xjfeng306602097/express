@@ -42,7 +42,7 @@
 		from
 		overdueexpress
 		<where>
-			<if test="overDueShelfId != 0">
+			<if test="overDueShelfId != 0 and overDueShelfId != null">
 				shelf_id = #{overDueShelfId}
 			</if>
 			<if test="express != null">
@@ -69,7 +69,7 @@
 		from
 		overdueexpress
 		<where>
-			<if test="overDueShelfId != 0">
+			<if test="overDueShelfId != 0 and overDueShelfId != null">
 				shelf_id = #{overDueShelfId}
 			</if>
 			<if test="express != null">
