@@ -1,12 +1,13 @@
 package com.express.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.express.dao.ExpressShelfDao;
-import com.express.model.Express;
-import com.express.model.ExpressHistory;
-import com.express.model.ExpressShelf;
-import com.express.model.OverDueExpress;
-import com.express.service.*;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +16,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
+import com.alibaba.fastjson.JSONObject;
+import com.express.dao.ExpressShelfDao;
+import com.express.model.Express;
+import com.express.model.ExpressHistory;
+import com.express.model.ExpressShelf;
+import com.express.model.OverDueExpress;
+import com.express.service.ExpressHistoryService;
+import com.express.service.ExpressService;
+import com.express.service.ExpressShelfService;
+import com.express.service.OverDueExpressService;
+import com.express.service.SendMailService;
 
 @Controller
 @RequestMapping("/express")
@@ -46,7 +52,6 @@ public class ExpressController {
 	@ResponseBody
 	@RequestMapping(value = "/getShelf", method = RequestMethod.GET)
 	public Object getExpressShelf(HttpServletRequest request, HttpServletResponse response) {
-		JSONObject jsonObject = new JSONObject();
 		Long id = Long.parseLong(request.getParameter("id"));
 		Express express = expressService.getExpressInfoById(id);
 		ExpressShelf shelf = new ExpressShelf();
