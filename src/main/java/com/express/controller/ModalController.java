@@ -23,4 +23,9 @@ public class ModalController {
 	public String getExpressModal() {
 		return "modal/expressModal";
 	}
+	
+	@RequestMapping(value = "/getInformModal", method = RequestMethod.GET)
+	public String getInformModal() {
+		return "modal/informModal";
+	}
 }

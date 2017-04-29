@@ -65,6 +65,7 @@ var Express = {
                             sendMessage.type = "button";
                             sendMessage.value = "重发短信";
                             sendMessage.className = "btn btn-success";
+                            sendMessage.addEventListener("click", Express.resendEmail, false);
                             sendMessage.expressNo = obj.expressNo; // 记录订单号
                             sendMessage.style.marginLeft = "10px";
                             tb.rows[index].cells[6].appendChild(sendMessage);
@@ -104,6 +105,39 @@ var Express = {
 			$('#expressNoText').html(target.expressNo);
 			$('#selectExpressNo').val(target.expressNo);
 			$('#expressStatus').val(target.status);
+		});
+	},
+	resendEmail : function(ev) {
+		$('#searchModal').modal('hide');
+		$('#informModal').modal({
+			show : true, // 显示弹出层
+			backdrop : 'static', // 禁止位置关闭
+			keyboard : true, // 关闭键盘事件
+			remote : "getInformModal"
+		}).on('loaded.bs.modal', function() {
+			$('#loadingImg').show();
+			$('#informText').html("请稍后...");
+		}).on('shown.bs.modal', function(){
+			$('#loadingImg').show();
+			$('#informText').html("请稍后...");
+		}).on('hidden.bs.modal', function() {
+			$('#loadingImg').show();
+			$('#informText').html();
+		});
+		var expressNo = ev.target.expressNo;
+		var express = {
+				expressNo : expressNo	
+		};
+		$.ajax({
+			type : "POST",
+			url : "resendEmail",
+			contentType : "application/json;chartset=utf-8",
+			dataType : "json",
+			data : JSON.stringify(express),
+			success : function(data){
+				$('#loadingImg').hide();
+				$('#informText').hide().html(data.message).show(300);
+			}
 		});
 	},
 	getMyExpress : function() {
