@@ -1,5 +1,6 @@
 package com.express.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.express.model.Express;
 import com.express.model.ExpressShelf;
 import com.express.model.User;
@@ -99,6 +100,14 @@ public class UserController {
         expressShelves=expressShelfService.queryShelfListByParams(expressShelf);
         return expressShelves;
     }
+    @ResponseBody
+    @RequestMapping(value = "/removeExpress",method = RequestMethod.POST)
+    public List<ExpressShelf> removeExpress(@RequestBody ExpressShelf expressShelf){
+        expressShelfService.removeExpress(expressShelf);
+        List<ExpressShelf> expressShelves =new ArrayList<>();
+        expressShelves=expressShelfService.queryShelfListByParams(new ExpressShelf());
+        return expressShelves;
+    }
 
     /**
      * 放入货柜
@@ -114,7 +123,7 @@ public class UserController {
             expressShelf.setShelfStatus("E");
             expressShelf.setCreateDate(new Date());
             expressShelfService.updateExpressShelf(expressShelf);
-            express.setStatus("W");
+            express.setStatus("E");
             expressService.updateExpress(express);
         }
         return expressShelf;
@@ -180,17 +189,20 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping(value = "/sendMail",method = RequestMethod.POST)
-    public String notification(@RequestBody Express express) throws IOException{
+    public Object notification(@RequestBody Express express) throws IOException{
         String verificationCode = DigestUtils
                 .md5DigestAsHex((express.getVerificationCode() + PropertyUtil.getProperty("Salt")).getBytes())
                 .substring(0, 6); // 获取验证码
         express.setVerificationCode(verificationCode);
+        JSONObject object=new JSONObject();
         try {
             sendMailService.sendVertificationCodeByEmail(express);
         } catch (IOException e) {
             e.printStackTrace();
-            return "error";
+            object.put("result","error");
+            return object;
         }
-        return "success";
+        object.put("result","success");
+        return object;
     }
 }

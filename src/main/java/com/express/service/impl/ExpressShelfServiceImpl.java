@@ -1,13 +1,5 @@
 package com.express.service.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-
-import org.springframework.stereotype.Service;
-
 import com.express.dao.ExpressDao;
 import com.express.dao.ExpressShelfDao;
 import com.express.dao.OverDueExpressDao;
@@ -15,6 +7,12 @@ import com.express.model.Express;
 import com.express.model.ExpressShelf;
 import com.express.model.OverDueExpress;
 import com.express.service.ExpressShelfService;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by wshibiao on 2017/4/7.
@@ -51,6 +49,14 @@ public class ExpressShelfServiceImpl implements ExpressShelfService {
 				expressDao.updateExpressInfo(express);
 			}
 		}
+	}
+
+	/**
+	 * 手动移除快件操作
+	 * @param expressShelf
+	 */
+	public void removeExpress(ExpressShelf expressShelf){
+		expressShelfDao.removeExpress(expressShelf);
 	}
 
 	@Override

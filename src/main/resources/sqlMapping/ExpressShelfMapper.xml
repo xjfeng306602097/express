@@ -30,6 +30,21 @@
 		</set>
 		where shelf_id = #{shelfId}
 	</update>
+	<update id="removeExpress">
+		update expressshelf
+		<set>
+			<if test="express.id != null">
+				expressinfo_id = NULL ,
+			</if>
+			<if test="createDate != null">
+				create_date = NULL ,
+			</if>
+			<if test="shelfStatus != null">
+				shelf_status = 'N'
+			</if>
+		</set>
+		where expressinfo_id = #{express.id}
+	</update>
 	<update id="clearExpressShelf">
 			update expressshelf
 				SET expressinfo_id=NULL ,
