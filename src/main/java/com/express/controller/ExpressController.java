@@ -4,10 +4,11 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.express.dao.ExpressShelfDao;
 import com.express.model.Express;
 import com.express.model.ExpressHistory;
 import com.express.model.ExpressShelf;
@@ -35,14 +35,15 @@ public class ExpressController {
 	ExpressService expressService;
 	@Autowired
 	ExpressShelfService expressShelfService;
-	@Resource
-	ExpressShelfDao expressShelfDao;
 	@Autowired
 	OverDueExpressService overDueExpressService;
 	@Autowired
 	ExpressHistoryService expressHistoryService;
 	@Autowired
 	SendMailService sendMailService;
+	
+	private static final Logger logger = (Logger) LoggerFactory.getLogger(ExpressController.class);
+	
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String toIndex(Model model) {
@@ -56,7 +57,7 @@ public class ExpressController {
 		Express express = expressService.getExpressInfoById(id);
 		ExpressShelf shelf = new ExpressShelf();
 		shelf.setExpress(express);
-		shelf = expressShelfDao.queryShelfByParams(shelf);
+		shelf = expressShelfService.queryShelfByParams(shelf);
 		return shelf;
 	}
 
@@ -133,5 +134,20 @@ public class ExpressController {
 			sendMailService.sendGetExpressSuccessEmail(express);
 		}
 		return jsonObject;
+	}
+	
+	@RequestMapping(value = "/resendEmail", method = RequestMethod.POST)
+	@ResponseBody
+	public Object resendEmail(@RequestBody Express express){
+		JSONObject result = new JSONObject();
+		express = expressService.queryExpressDetail(express);
+		try {
+			sendMailService.sendVertificationCodeByEmail(express);
+			result.put("message", "邮件已发送至您的邮箱，请接收！");
+		} catch (IOException e) {
+			logger.error("Send Mail Service connection error");
+			result.put("message", "发送失败！");
+		}
+		return result;
 	}
 }
