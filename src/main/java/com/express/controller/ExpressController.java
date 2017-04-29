@@ -123,6 +123,7 @@ public class ExpressController {
 				expressHistoryE.setCreateDate(new Date());
 				expressShelf.setExpress(null);
 				expressShelf.setShelfStatus("N");
+				expressShelf.setCreateDate(null);
 				expressShelfService.updateExpressShelf(expressShelf); // 修改货柜记录
 				expressService.updateExpress(express);// 修改订单记录
 				expressHistoryService.insertExpressHistory(expressHistoryE);// 插入历史记录
