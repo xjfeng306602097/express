@@ -1,26 +1,34 @@
 package com.express.controller;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.DigestUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.fastjson.JSONObject;
 import com.express.dao.ExpressShelfDao;
 import com.express.model.Express;
 import com.express.model.ExpressHistory;
 import com.express.model.ExpressShelf;
 import com.express.model.OverDueExpress;
-import com.express.service.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.annotation.Resource;
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
+import com.express.service.ExpressHistoryService;
+import com.express.service.ExpressService;
+import com.express.service.ExpressShelfService;
+import com.express.service.OverDueExpressService;
+import com.express.service.SendMailService;
+import com.express.util.PropertyUtil;
 
 @Controller
 @RequestMapping("/express")
@@ -123,9 +131,13 @@ public class ExpressController {
 
 	@RequestMapping(value = "/resendEmail", method = RequestMethod.POST)
 	@ResponseBody
-	public Object resendEmail(@RequestBody Express express){
+	public Object resendEmail(@RequestBody Express express) throws IOException{
 		JSONObject result = new JSONObject();
 		express = expressService.queryExpressDetail(express);
+		String verificationCode = DigestUtils
+				.md5DigestAsHex((express.getVerificationCode() + PropertyUtil.getProperty("Salt")).getBytes())
+				.substring(0, 6);// 生成验证码
+		express.setVerificationCode(verificationCode);// 先更新后再重新给verficationCode赋值，避免入库
 		try {
 			sendMailService.sendVertificationCodeByEmail(express);
 			result.put("message", "邮件已发送至您的邮箱，请接收！");
