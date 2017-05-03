@@ -14,6 +14,7 @@ public interface ExpressShelfDao {
      * @param expressShelf
      */
     public void  insertExpressShelf(ExpressShelf expressShelf);
+    public void removeExpress(ExpressShelf expressShelf);
     /**
      *清空货柜
      * @param

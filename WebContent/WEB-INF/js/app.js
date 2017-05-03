@@ -28,12 +28,13 @@ const admin= {
             template: '#about',
 
         };
-        //查询快件组件
+        //查询当日快件组件
         const Express = {
             template: '#query-template',
             data: function () {
                 return {
                     isShow:false,
+                    mailResult:{},
                     express: {},
                     newExpress: {},
                     upExpress: {},
@@ -41,17 +42,20 @@ const admin= {
                     shelf:{},
                     tempExpress:{},
                     shelfList:[],
-                }
+                    sendMail:'通知',
+                    searchButton:"查询"}
             },
             methods: {
                 //查询快件
                 getExpressList: function () {
+                    this.searchButton="查询中...";
                     this.$http.post("getExpress", this.express).then(function (response) {
                         response.data.forEach(function (item) {
                             item.fromDate = new Date(item.fromDate).Format('yyyy-MM-dd');
                             item.arriveDate = new Date(item.arriveDate).Format('yyyy-MM-dd');
                             item.receiveDate=(item.receiveDate!=null)?new Date(item.receiveDate).Format('yyyy-MM-dd'):"";
                         });
+                        this.searchButton="查询";
                         this.isShow=true;
                         this.expresses = response.data
                     }).catch(function (response) {
@@ -63,14 +67,14 @@ const admin= {
 
                     e.fromDate=(new Date(e.fromDate)).Format('yyyy-MM-dd');
                     e.arriveDate=(new Date(e.arriveDate)).Format('yyyy-MM-dd');
-                    e.arriveDate=(e.arriveDate!=null)?(new Date(e.arriveDate)).Format('yyyy-MM-dd'):"";
+                    e.receiveDate=(e.receiveDate!=null)?(new Date(e.receiveDate)).Format('yyyy-MM-dd'):"";
                     this.upExpress=e;
                     $('#updateModal').modal('show');
                 },
                 showShelfLocation: function (e) {
                     e.fromDate=(new Date(e.fromDate)).Format('yyyy-MM-dd');
                     e.arriveDate=(new Date(e.arriveDate)).Format('yyyy-MM-dd');
-                    e.arriveDate=(e.arriveDate!=null)?(new Date(e.arriveDate)).Format('yyyy-MM-dd'):"";
+                    // e.receiveDate=(e.receiveDate!=null)?(new Date(e.receiveDate)).Format('yyyy-MM-dd'):"";
                     this.tempExpress=e;
                     this.$http.post('getShelf',e).then(function (response) {
                         this.shelf=response.data;
@@ -80,8 +84,13 @@ const admin= {
                     });
                 },
                 putIntoShelf: function () {
+                    // this.tempExpress.fromDate=(new Date(this.tempExpress.fromDate)).Format('yyyy-MM-dd');
+                    // this.tempExpress.arriveDate=(new Date(this.tempExpress.arriveDate)).Format('yyyy-MM-dd');
+                    // // alert(this.tempExpress.receiveDate);
+                    // this.tempExpress.receiveDate=null;
                     this.$http.post('putIntoShelf',this.tempExpress).then(function (response) {
                         // this.shelfList=response.data;
+
                         $('#shelfLocation').modal('hide');
                         this.shelf=response.data;
                         $('#responseLocation').modal('show');
@@ -130,14 +139,18 @@ const admin= {
                         alert("error")
                     })
                 },
-                notification:function (e) {
+                notification:function (e,event) {
+                    this.sendMail="发送中...";
                     e.fromDate=(new Date(e.fromDate)).Format('yyyy-MM-dd');
                     e.arriveDate=(new Date(e.arriveDate)).Format('yyyy-MM-dd');
-                    e.receiveDate=(e.receiveDate!=null)?(new Date(e.receiveDate)).Format('yyyy-MM-dd'):"";
+                    e.receiveDate=(e.receiveDate!="")?(new Date(e.receiveDate)).Format('yyyy-MM-dd'):"";
                     this.$http.post("sendMail",e).then(function (response) {
-                        alert("success");
+                        this.sendMail="通知";
+                        this.mailResult=response.data;
+                        $('#mailResult').modal('show');
                     }).catch(function (response) {
-                        alert("error");
+                        this.mailResult=response.data;
+                        $('#mailResult').modal('show');
                     })
                 }
             }
@@ -172,16 +185,35 @@ const admin= {
 
                     });
                 },
-                moveExpress:{
+                removeExpress:function (s) {
+                    this.$http.post("removeExpress",s).then(function (response) {
+                        response.data.forEach(function (item) {
+                            item.createDate = new Date(item.createDate).Format('yyyy-MM-dd');
+                        });
+                        this.shelfList=response.data;
+                    }).catch(function (response) {
 
+                    });
                 }
+
+            }
+        };
+
+        const OverDue={
+            template:"",
+            data:function () {
+                return;
+            },
+            methods:{
+
             }
         };
         /* 创建路由映射  */
         const routes = [
             {path: '/home', component: Home},
             {path: '/today', component: Express},
-            {path: '/shelf', component: Shelf}
+            {path: '/shelf', component: Shelf},
+            {path: '/overdue', component: OverDue}
 
         ];
         /* 创建路由器  */

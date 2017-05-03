@@ -478,7 +478,22 @@
                     </div>
                 </div>
             </div>
-
+            <!--发送邮件后的模态框-->
+            <div class="modal fade bs-example-modal-sm" id="mailResult" tabindex="-1" role="dialog" >
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">邮件发送结果</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" v-model="mailResult.result"/>
+                            <p v-if="mailResult.result!='error'">邮件发送成功</p>
+                            <p v-else>邮件发送失败</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!--快件查询表头、结果列表模版-->
         <form class="form-inline" id="params">
                     <label>寄件日期</label>
@@ -513,14 +528,14 @@
                     <div class="form-group">
                         <select  v-model="express.status" class="form-control">
                             <option>N</option>
-                            <option>W</option>
+                            <option>E</option>
+                            <option>O</option>
                             <option>S</option>
-                            <option>F</option>
                         </select>
                     </div>
 
                     <button id="searchButton" class="btn btn-primary" type="button" @click="getExpressList()" >
-                        <span class="glyphicon glyphicon-search"></span>查询
+                        <span class="glyphicon glyphicon-search"></span>{{searchButton}}
                     </button>
                     <button id="createExpress" class="btn btn-primary" type="button" @click="createModal()" >
                         <span class="glyphicon glyphicon-plus"></span>录入快件
@@ -565,7 +580,7 @@
                                     <td>{{e.status}}</td>
                                     <td>
                                         <button type="button" class="btn btn-primary" @click="openModal(e)">修改</button>
-                                        <button type="button" class="btn btn-primary" @click="notification(e)">通知</button>
+                                        <button type="button" class="btn btn-primary" @click="notification(e,$event)">{{sendMail}}</button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -685,7 +700,7 @@
                 <div class="form-group">
                     <select  v-model="shelf.shelfStatus" class="form-control">
                         <option>N</option>
-                        <option>O</option>
+                        <option>E</option>
                     </select>
                 </div>
 
@@ -721,8 +736,8 @@
                                     <td v-if="s.shelfStatus=='E'">待领取</td>
                                     <td v-else="s.shelfStatus=='N'">空闲</td>
                                     <td>
-                                        <button type="button" class="btn btn-primary" @click="openModal(e)">修改</button>
-                                        <button type="button" class="btn btn-primary" @click="notification(e)">移除快件</button>
+                                        <!--<button type="button" class="btn btn-primary" @click="openModal(e)">修改</button>-->
+                                        <button type="button" class="btn btn-primary" @click="removeExpress(s)">移除快件</button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -738,6 +753,10 @@
 
             <!--</div>-->
         </div>
+    </script>
+
+    <script type="text/x-template">
+
     </script>
 
     <script type="text/javascript" >

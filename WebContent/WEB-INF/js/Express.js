@@ -122,7 +122,7 @@ var Express = {
 			$('#informText').html("请稍后...");
 		}).on('hidden.bs.modal', function() {
 			$('#loadingImg').show();
-			$('#informText').html();
+			$('#informText').html("");
 		});
 		var expressNo = ev.target.expressNo;
 		var express = {
