@@ -1,14 +1,13 @@
 package com.express.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.express.model.Express;
-import com.express.model.ExpressShelf;
-import com.express.model.User;
-import com.express.service.ExpressService;
-import com.express.service.ExpressShelfService;
-import com.express.service.SendMailService;
-import com.express.service.UserService;
-import com.express.util.PropertyUtil;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
@@ -17,11 +16,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.alibaba.fastjson.JSONObject;
+import com.express.model.Express;
+import com.express.model.ExpressShelf;
+import com.express.model.LoginResult;
+import com.express.model.User;
+import com.express.service.ExpressService;
+import com.express.service.ExpressShelfService;
+import com.express.service.SendMailService;
+import com.express.service.UserService;
+import com.express.util.PropertyUtil;
 
 @Controller
 @RequestMapping("/admin")
@@ -129,22 +133,52 @@ public class UserController {
         return expressShelf;
     }
     @ResponseBody
-    @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public String login(@RequestBody User params, HttpServletRequest request) throws IOException{
-        String passwordParams=params.getPassword();
-        // User user=userService.getUserById(params.getUserId());
-        // if(user.getPassword().equals(DigestUtils.md5DigestAsHex((passwordParams.getBytes()+ PropertyUtil.getProperty("LoginSalt")).getBytes()))
-        //         &&user.getUserId().equals(params.getUserId())){
-        //     return "success";
-        // } else {
-        //     return "fail";
-        // }
-        return "success";
-    }
-    @RequestMapping(value = "/redirect",method = RequestMethod.GET)
-    public String index(){
-        return "admin/sap";
-    }
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public LoginResult login(@RequestBody User params, HttpServletRequest request) throws IOException {
+		LoginResult loginResult = new LoginResult();
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		if (user != null) {
+			String userId = user.getUserId();
+			String password = user.getPassword();
+			User result = userService.getUserById(userId);
+			if (result.getPassword().equals(password)) {
+				loginResult.setLoginStatus("success");
+				loginResult.setMessage("success");
+				return loginResult;
+			} else {
+				loginResult.setLoginStatus("error");
+				loginResult.setMessage("${PleaseCheckYourPassword}");
+				return loginResult;
+			}
+		} else {
+			String userId = params.getUserId();
+			String password = DigestUtils
+					.md5DigestAsHex((params.getPassword() + PropertyUtil.getProperty("Salt")).getBytes());
+			User result = userService.getUserById(userId);
+			if (result.getPassword().equals(password)) {
+				params.setPassword(password);
+				session.setMaxInactiveInterval(20*60); // 20分钟
+				session.setAttribute("user", params);
+				loginResult.setLoginStatus("success");
+				loginResult.setMessage("success");
+				return loginResult;
+			} else {
+				loginResult.setLoginStatus("error");
+				loginResult.setMessage("${PleaseCheckYourPassword}");
+				return loginResult;
+			}
+		}
+	}
+    @RequestMapping(value = "/redirect", method = RequestMethod.GET)
+	public String index(HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute("user");
+		if (user != null ){
+			return "admin/sap";
+		} else {
+			return "admin/index";
+		}
+	}
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     public String createUser(@RequestBody User user) throws IOException{
         User userNew=new User();
@@ -205,4 +239,9 @@ public class UserController {
         object.put("result","success");
         return object;
     }
+    
+    @RequestMapping(value = "/loginIndex", method = RequestMethod.GET)
+	public String toLoginIndex() {
+		return "admin/index";
+	}
 }
