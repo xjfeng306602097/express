@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Login Test</title>
+<link href="../css/bootstrap.css" type="text/css" rel="stylesheet">
+<link href="../css/jquery.vegas.min.css" type="text/css"
+	rel="stylesheet" />
+<link href="../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap-3.1.1.min.js"></script>
+<style type="text/css">
+.loginModal {
+	width: 50%;
+	color: black;
+	padding-top: 10%;
+	opacity: 0.8
+}
+
+.loginTitle {
+	background-color: rgb(102, 153, 255);
+	color: white
+}
+</style>
+</head>
+<body>
+	<div class="container" id="app">
+		<div id="loginModal" class="modal">
+			<div class="modal-dialog loginModal">
+				<div class="modal-content">
+					<div class="modal-header loginTitle">
+						<h3 class="modal-title text-center">
+							<span class="glyphicon glyphicon-user"></span>{{title}}
+						</h3>
+					</div>
+					<div class="modal-body" style="opacity: 0.9" id="#app">
+						<div class="row">
+							<div
+								class="col-lg-offset-3 col-lg-9 col-md-offset-3 col-md-9 col-sm-offset-3 col-sm-9"
+								style="text-align: left;">
+								<div class="form-group">
+									<input v-model="user.userId" class="form-control input-lg"
+										type="text" maxlength="15" required="required" name="userId"
+										placeholder="输入用户名" style="width: 60%;" />
+								</div>
+								<div class="form-group">
+									<input v-model="user.password" class="form-control input-lg"
+										type="password" maxlength="15" required="required"
+										name="password" placeholder="输入密码" style="width: 60%;" />
+								</div>
+								<div class="form-group">
+									<button type="submit" class="btn btn-lg btn-info"
+										v-on:click="login()" style="margin-left: 20%">
+										<span class="glyphicon glyphicon-off"></span> 登录
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="../js/vue.js"></script>
+	<script src="../js/vue-resource.js"></script>
+	<script src="../admin_js/admin.js"></script>
+	<script type="text/javascript">
+		$('#loginModal').modal({
+			show : true, // 显示弹出层
+			backdrop : 'static', // 禁止位置关闭
+			keyboard : true // 关闭键盘事件
+		});
+		var user = {
+			userId : '',
+			password : ''
+		} 
+		var vue = new Vue({
+	            el: '#app',
+	            data: {
+					title : '登录',
+					user : user
+			    },
+			    methods:{
+					login : function(){
+						Admin.login(user,this);
+					}
+				}
+	     })
+	</script>
+	<!-- EASING SCROLL SCRIPTS PLUGIN  -->
+	<script src="../js/vegas/jquery.vegas.min.js"></script>
+	<!-- VEGAS SLIDESHOW SCRIPTS  -->
+	<script src="../js/jquery.easing.min.js"></script>
+	<script src="../js/vegas-custom.js"></script>
+</body>
+</html>

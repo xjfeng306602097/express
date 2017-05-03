@@ -8,8 +8,7 @@
         <result property="password" column="password" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <insert id="createUser" useGeneratedKeys="true"
-            keyProperty="user_id">
+    <insert id="createUser" keyProperty="userId">
         INSERT INTO express.users(user_id,user_name,password) VALUES (#{userId},#{userName},#{password})
     </insert>
 
