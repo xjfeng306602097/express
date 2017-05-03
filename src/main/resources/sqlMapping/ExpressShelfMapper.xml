@@ -97,9 +97,9 @@
 				and expressinfo_id = #{express.id}
 			</if>
 			<if test="createDate != null">
-				and create_date = #{createDate}
+				and DATE_FORMAT(create_date,'%Y-%m-%d') = DATE_FORMAT(#{createDate},'%Y-%m-%d')
 			</if>
-			<if test="shelfStatus != null">
+			<if test="shelfStatus != null and shelfStatus!=''">
 				and shelf_status = #{shelfStatus}
 			</if>
 		</where>

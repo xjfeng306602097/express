@@ -102,10 +102,11 @@
 		where
 		1=1
 		<if test="fromDate!=null and fromDate!=''">
-			and from_date=#{fromDate}
+			and DATE_FORMAT(from_date,'%Y-%m-%d')=DATE_FORMAT(#{fromDate},'%Y-%m-%d')
 		</if>
 		<if test="arriveDate!=null and arriveDate!=''">
-			and arrive_date=#{arriveDate}
+			and DATE_FORMAT(arrive_date,'%Y-%m-%d')=DATE_FORMAT(#{arriveDate},'%Y-%m-%d')
+
 		</if>
 		<if test="expressNo!=null and  expressNo!=''">
 			and express_no=#{expressNo}
