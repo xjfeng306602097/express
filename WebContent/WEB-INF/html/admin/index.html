@@ -42,11 +42,13 @@
 									<input v-model="user.userId" class="form-control input-lg"
 										type="text" maxlength="15" required="required" name="userId"
 										placeholder="输入用户名" style="width: 60%;" />
+									<span style="color:red">{{errorUserIdMessage}}</span>
 								</div>
 								<div class="form-group">
 									<input v-model="user.password" class="form-control input-lg"
 										type="password" maxlength="15" required="required"
 										name="password" placeholder="输入密码" style="width: 60%;" />
+									<span style="color:red">{{errorPasswordMessage}}</span>
 								</div>
 								<div class="form-group">
 									<button type="submit" class="btn btn-lg btn-info"
@@ -61,7 +63,6 @@
 			</div>
 		</div>
 	</div>
-
 	<script src="../js/vue.js"></script>
 	<script src="../js/vue-resource.js"></script>
 	<script src="../admin_js/admin.js"></script>
@@ -74,19 +75,21 @@
 		var user = {
 			userId : '',
 			password : ''
-		} 
+		};
 		var vue = new Vue({
 	            el: '#app',
 	            data: {
 					title : '登录',
-					user : user
+					user : user,
+					errorUserIdMessage : null,
+					errorPasswordMessage : null,
 			    },
 			    methods:{
 					login : function(){
-						Admin.login(user,this);
+						Admin.login(user);
 					}
 				}
-	     })
+	     });
 	</script>
 	<!-- EASING SCROLL SCRIPTS PLUGIN  -->
 	<script src="../js/vegas/jquery.vegas.min.js"></script>

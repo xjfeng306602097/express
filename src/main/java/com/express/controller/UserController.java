@@ -157,12 +157,12 @@ public class UserController {
 				loginResult.setMessage("success");
 				return loginResult;
 			} else {
-				loginResult.setLoginStatus("error");
+				loginResult.setLoginStatus("errorpassword");
 				loginResult.setMessage(PropertyUtil.getProperty("PleaseCheckYourPassword"));
 				return loginResult;
 			}
 		} else {
-			loginResult.setLoginStatus("error");
+			loginResult.setLoginStatus("erroruserid");
 			loginResult.setMessage(PropertyUtil.getProperty("PleaseCheckYourUserId"));
 			return loginResult;
 		}
