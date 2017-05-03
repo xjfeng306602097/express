@@ -176,7 +176,7 @@ public class UserController {
 		if (user != null ){
 			return "admin/sap";
 		} else {
-			return "admin/index";
+			return "redirect:loginIndex";
 		}
 	}
     @RequestMapping(value = "/create",method = RequestMethod.POST)
