@@ -391,8 +391,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button v-if="btShow"  type="button" class="btn btn-primary"  @click="createExpress()">提交</button>
-                        <button v-else disabled type="button" class="btn btn-primary"  @click="createExpress()">提交</button>
+                        <button v-if="btShow"  type="button" class="btn btn-primary"  @click="validateSubmit()">提交</button>
+                        <button v-else disabled type="button" class="btn btn-primary"  @click="validateSubmit()">提交</button>
                     </div>
                 </div>
             </div>
@@ -406,58 +406,47 @@
                         <h4 class="modal-title"  >修改快件</h4>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form class="form-horizontal">
                             <div class="form-group">
-                                <label for="consignee" class="control-label">收件人</label>
-                                <p class="control has-icon has-icon-right">
+                                <label for="consignee" class="col-sm-2 control-label">收件人</label>
+                                <div class="col-sm-8">
                                     <input type="text" class="form-control" id="upConsignee" v-model="upExpress.consignee" placeholder="输入收件人">
-                                    <span v-show="errorMessage">{{val}}</span>
-                                </p>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="upContact" class="col-sm-2 control-label">手机号</label>
+                                <div class="col-sm-8">
+                                    <input type="tel" class="form-control" id="upContact" v-model="upExpress.contact " placeholder="输入手机号">
+                                </div>
+                                <span  v-show="isShowError.phoneError">{{val}}</span>
                             </div>
                             <div class="form-group">
-                                <label for="expressNumber" class="control-label">快递单号</label>
-                                <input type="text" class="form-control" id="upExpressNumber" v-model="upExpress.expressNo" placeholder="输入快递单号">
-                            </div>
-                            <div class="form-group">
-                                <label for="upCompany" class="control-label">快递公司</label>
-                                <input type="text" class="form-control" id="upCompany" v-model="upExpress.company " placeholder="输入快递公司">
-                            </div>
-                            <div class="form-group">
-                                <label for="upContact" class="control-label">手机号</label>
-                                <input type="tel" class="form-control" id="upContact" v-model="upExpress.contact " placeholder="输入手机号">
-                            </div>
-                            <div class="form-group">
-                                <label for="upMailAddress" class="control-label">邮箱地址</label>
-                                <p>
+                                <label for="upMailAddress" class="col-sm-2 control-label">邮箱地址</label>
+                                <div class="col-sm-8">
                                     <input type="email" class="form-control" id="upMailAddress" v-model="upExpress.emailAddress " placeholder="输入邮箱地址">
-                                    <span v-show="errorMessage">{{val}}</span>
-                                </p>
+                                </div>
+                                <span  v-show="isShowError.mailError">{{val}}</span>
                             </div>
+
                             <div class="form-group">
-                                <label for="upFromDate" class="control-label">寄件时间</label>
-                                <input type="date" class="form-control" id="upFromDate" v-model="upExpress.fromDate" placeholder="输入寄件时间">
-                            </div>
-                            <div class="form-group">
-                                <label for="upArriveDate" class="control-label">到达时间</label>
-                                <input type="date" class="form-control" id="upArriveDate" v-model="upExpress.arriveDate" placeholder="输入到达时间">
-                            </div>
-                            <div class="form-group">
-                                <label for="upAddressSource" class="control-label">寄件地址</label>
-                                <input type="text" class="form-control" id="upAddressSource" v-model="upExpress.addressSource" placeholder="输入寄件地址">
-                            </div>
-                            <div class="form-group">
-                                <label for="upAddressDest" class="control-label">收件地址</label>
-                                <input type="text" class="form-control" id="upAddressDest" v-model="upExpress.addressDest" placeholder="输入收件地址">
-                            </div>
-                            <div class="form-group">
-                                <label for="upStatus" class="control-label">快递状态</label>
-                                <input type="text" class="form-control" id="upStatus" v-model="upExpress.status" placeholder="输入快递状态">
+                                <label for="upStatus" class="col-sm-2 control-label">快递状态</label>
+                                <div class="col-sm-8">
+                                    <!--<input type="text" class="form-control " style="text-transform:uppercase;" id="upStatus" v-model="upExpress.status" placeholder="输入快递状态">-->
+                                    <select  v-model="upExpress.status" id="upStatus" class="form-control">
+                                        <option value="N">录入</option>
+                                        <option value="E">当日件</option>
+                                        <option value="O">隔日件</option>
+                                        <option value="S">已领取</option>
+                                    </select>
+                                </div>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary"  @click="updateExpress()">提交</button>
+                        <button  type="button" class="btn btn-primary"  @click="validateSubmit()">提交</button>
                     </div>
                 </div>
             </div>
@@ -614,8 +603,8 @@
                                 <td v-if="e.status=='E'">待领取</td>
                                 <td v-if="e.status=='S'">已领取</td>
                                 <td>
-                                    <button type="button" class="btn btn-primary" @click="openModal(e)">修改</button>
-                                    <button type="button" class="btn btn-primary" v-if="e.status=='E'||e.status=='O'" @click="notification(e,$event)">{{sendMail}}</button>
+                                    <!--<button type="button" class="btn btn-primary" @click="openModal(e)">修改</button>-->
+                                    <button type="button" class="btn btn-primary" v-if="e.status=='E'||e.status=='O'" @click.once="notification(e)">{{sendMail}}</button>
                                     <!--<button type="button" class="btn btn-primary" v-else="e.status=='N'" @click="notification(e,$event)">{{sendMail}}</button>-->
                                 </td>
                             </tr>
@@ -792,24 +781,7 @@
     $(function() {
         admin.route();
     });
-    //        const config = {
-    //            errorBagName: 'errors', // change if property conflicts.
-    //            fieldsBagName: 'fields',
-    //            delay: 0,
-    //            locale: 'en',
-    //            dictionary: null,
-    //            strict: true,
-    //            enableAutoClasses: false,
-    //            classNames: {
-    //                touched: 'touched', // the control has been blurred
-    //                untouched: 'untouched', // the control hasn't been blurred
-    //                valid: 'valid', // model is valid
-    //                invalid: 'invalid', // model is invalid
-    //                pristine: 'pristine', // control has not been interacted with
-    //                dirty: 'dirty' // control has been interacted with
-    //            }
-    //        };
-    //        Vue.use(VeeValidate,config);
+
 </script>
 <!--vue实现-->
 <script type="text/javascript" src="../app_js/app.js"></script>

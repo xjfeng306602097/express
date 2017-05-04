@@ -35,6 +35,7 @@ const admin= {
                 return {
                     isShow:false,
                     btShow:false,
+                    upBtShow:false,
                     isShowError:{
                         mailError:false,
                         nameError:false,
@@ -62,7 +63,8 @@ const admin= {
                         addressSource:null,
                         addressDest:null,
                     },
-                    upExpress: {},
+                    upExpress: {
+                    },
                     expresses:[],
                     shelf:{},
                     tempExpress:{},
@@ -70,6 +72,7 @@ const admin= {
                     sendMail:'通知',
                     searchButton:"查询",
                     location:"",
+                    title:""
                 }
             },
             computed:{
@@ -85,31 +88,65 @@ const admin= {
                     //     return this.errorMessage.name="不能为bb"
                     // }
                     if (!mailRegex.test(this.newExpress.emailAddress)&&this.newExpress.emailAddress!=null&&this.newExpress.emailAddress!=""){
-                        // this.isShowError.nameError=false;
-                        // this.isShowError.phoneError=false;
-                        // this.isShowError.expressNoError=false;
+                        this.isShowError.phoneError=false;
+                        this.isShowError.expressNoError=false;
                         this.isShowError.mailError=true;
-                        return  this.errorMessage.email="格式错误";
+                        return  this.errorMessage.email="邮箱格式错误";
+                    }
+                    if (!mailRegex.test(this.upExpress.emailAddress)&&this.upExpress.emailAddress!=null&&this.upExpress.emailAddress!=""){
+                        this.isShowError.phoneError=false;
+                        this.isShowError.expressNoError=false;
+                        this.isShowError.mailError=true;
+                        return  this.errorMessage.email="邮箱格式错误";
                     }
                     if (!phoneRegex.test(this.newExpress.contact)&&this.newExpress.contact!=null&&this.newExpress.contact!=""){
-                        // this.isShowError.nameError=false;
-                        // this.isShowError.mailError=false;
-                        // this.isShowError.expressNoError=false;
+                        this.isShowError.mailError=false;
+                        this.isShowError.expressNoError=false;
                         this.isShowError.phoneError=true;
-
-                        return  this.errorMessage.phone="格式错误";
+                        return  this.errorMessage.phone="手机号格式错误";
+                    }
+                    if (!phoneRegex.test(this.upExpress.contact)&&this.upExpress.contact!=null&&this.upExpress.contact!=""){
+                        this.isShowError.mailError=false;
+                        this.isShowError.expressNoError=false;
+                        this.isShowError.phoneError=true;
+                        return  this.errorMessage.phone="手机号格式错误";
                     }
                     if (!expressNoRegex.test(this.newExpress.expressNo)&&this.newExpress.expressNo!=null&&this.newExpress.expressNo!=""){
+                        this.isShowError.mailError=false;
                         this.isShowError.expressNoError=true;
-                        return  this.errorMessage.expressNo="格式错误";
+                        this.isShowError.phoneError=false;
+                        return  this.errorMessage.expressNo="10位快递单号";
                     }
-                    for (var key in this.newExpress){
-                        if (this.newExpress[key]==null&&this.newExpress[key]!=""){
-                            this.btShow=false;
-                        }else {
-                            this.btShow=true;
+                    if (!expressNoRegex.test(this.upExpress.expressNo)&&this.upExpress.expressNo!=null&&this.upExpress.expressNo!=""){
+                        this.isShowError.mailError=false;
+                        this.isShowError.expressNoError=true;
+                        this.isShowError.phoneError=false;
+                        return  this.errorMessage.expressNo="10位快递单号";
+                    }
+                    var temp=0;
+
+                    for (var key in this.newExpress) {
+                        if (this.newExpress[key] == null || this.newExpress[key] == "") {
+                            temp++
                         }
                     }
+                    if (temp>0){
+                        this.btShow = false;
+                    }else{
+                        this.btShow = true;
+                    }
+                    var temp2=0;
+                    for (var key in this.upExpress) {
+                        if (this.upExpress[key] == null || this.upExpress[key] == "") {
+                            temp2++
+                        }
+                    }
+                    if (temp2>0){
+                        this.upBtShow = false;
+                    }else{
+                        this.upBtShow = true;
+                    }
+
                 }
             },
             methods: {
@@ -181,39 +218,43 @@ const admin= {
                     // });
                 },
                 createExpress: function () {
-                    // if (this.newExpress.contact==null||this.newExpress.contact==""){
-                    //     alert("收件人不能为空");
-                    //     for (var key in this.newExpress){
-                    //         alert(key);
-                    //         alert(key+''+this.newExpress[key]);
-                    //     }
-                    //     return ;
-                    // }
-                    this.$http.post("createExpress", this.newExpress).then(function (response) {
-                        response.data.forEach(function (item) {
-                            const date = new Date(item.fromDate).toLocaleDateString();
-                            item.fromDate = date;
-                            const arriveDate = new Date(item.arriveDate).toLocaleDateString();
-                            item.arriveDate = arriveDate;
-                        });
-                        this.expresses.unshift(response.data[0]);
-                        this.isShow=true;
-                        $('#createExpressModal').modal('hide');
+                    const mailRegex = /^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g;
+                    const phoneRegex = /^1(3|4|5|7|8)\d{9}$/;
+                    const expressNoRegex = /^[0-9a-zA-Z]{10,}$/;
+                    if(mailRegex.test(this.newExpress.emailAddress)&&phoneRegex.test(this.newExpress.contact)&&expressNoRegex.test(this.newExpress.expressNo)) {
+                        this.$http.post("createExpress", this.newExpress).then(function (response) {
+                            response.data.forEach(function (item) {
+                                const date = new Date(item.fromDate).toLocaleDateString();
+                                item.fromDate = date;
+                                const arriveDate = new Date(item.arriveDate).toLocaleDateString();
+                                item.arriveDate = arriveDate;
+                            });
+                            this.expresses.unshift(response.data[0]);
+                            this.isShow=true;
+                            $('#createExpressModal').modal('hide');
 
-                    }).catch(function (response) {
-                        alert("error")
-                    });
+                        }).catch(function (response) {
+                            alert("error")
+                        });
+                    }else {
+                        alert("输入格式有错");
+                        return false;
+                    }
+
                 },
                 updateExpress:function () {
+                    this.upExpress.receiveDate=(this.upExpress.receiveDate!=null&&this.upExpress.receiveDate!="")?(new Date(this.upExpress.receiveDate)).Format('yyyy-MM-dd'):null;
                     this.$http.post("updateExpress",this.upExpress).then(function (response) {
-                        alert("success");
-                        $('#updateModal').modal('hide');
-                    }).catch(function (response) {
-                        alert("error")
-                    })
+                            alert("success");
+                            $('#updateModal').modal('hide');
+                        }).catch(function (response) {
+                            alert("error")
+                        })
+
+
                 },
-                notification:function (e,event) {
-                    this.sendMail="发送中...";
+                notification:function (e) {
+                    // this.sendMail="发送中...";
                     this.$http.post("sendMail",e).then(function (response) {
                         this.sendMail="通知";
                         this.mailResult=response.data;
@@ -223,27 +264,18 @@ const admin= {
                         $('#mailResult').modal('show');
                     })
                 },
-                validateSubmit:function (obj) {
-                    if (obj.contact==null||obj.contact==""){
-                        alert("收件人不能为空");
-                        return ;
-                    }if (obj.expressNo==null||this.newExpress.contact==""){
-                        alert("单号不能为空");
-                        return ;
-                    }if (this.newExpress.contact==null||this.newExpress.contact==""){
-                        alert("邮箱地址不能为空");
-                        return ;
-                    }if (this.newExpress.contact==null||this.newExpress.contact==""){
-                        alert("不能为空");
-                        return ;
-                    }if (this.newExpress.contact==null||this.newExpress.contact==""){
-                        alert("收件人不能为空");
-                        return ;
-                    }if (this.newExpress.contact==null||this.newExpress.contact==""){
-                        alert("收件人不能为空");
-                        return ;
+                validateSubmit:function () {
+                    //录入快递的表单验证
+                    const mailRegex = /^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g;
+                    const phoneRegex = /^1(3|4|5|7|8)\d{9}$/;
+                    const expressNoRegex = /^[0-9a-zA-Z]{10,}$/;
+                    if(mailRegex.test(this.newExpress.emailAddress)&&phoneRegex.test(this.newExpress.contact)&&expressNoRegex.test(this.newExpress.expressNo)) {
+                        this.createExpress();
+                    }else {
+                        alert("输入格式有错");
+                        return false;
                     }
-                }
+               }
             }
         };
         // 货柜管理
