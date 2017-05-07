@@ -4704,6 +4704,12 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 }
+.pagination-centered-v3 {
+	margin : 0 auto;
+}
+.pagination-right-v3 {
+	margin-right ：0;
+}
 .pager {
   padding-left: 0;
   margin: 20px 0;
