@@ -1,16 +1,20 @@
 package com.express.service.impl;
 
+import java.io.IOException;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
+
 import com.express.dao.ExpressDao;
 import com.express.model.Express;
 import com.express.service.ExpressService;
 import com.express.util.PropertyUtil;
-import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-import java.io.IOException;
-import java.util.List;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 /**
  * Created by wshibiao on 2017/4/7.
@@ -40,18 +44,18 @@ public class ExpressServiceImpl implements ExpressService {
 	public void createExpress(Express express) {
 		expressDao.insertExpressInfo(express);
 	}
-	
+
 	@Transactional
 	@Override
 	public void updateExpress(Express express) {
 		expressDao.updateExpressInfo(express);
 	}
-	
+
 	@Override
 	public void deleteExpress(Express express) {
 
 	}
-	
+
 	@Override
 	public Express queryExpressDetail(Express express) {
 		return expressDao.queryExpressDetail(express);
@@ -59,11 +63,14 @@ public class ExpressServiceImpl implements ExpressService {
 
 	/**
 	 * 确认密码是否正确
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@Override
 	public boolean affirmCode(Express express, String verificationCode) throws IOException {
-		String code = DigestUtils.md5DigestAsHex((express.getVerificationCode() + PropertyUtil.getProperty("Salt")).getBytes()).substring(0, 6);
+		String code = DigestUtils
+				.md5DigestAsHex((express.getVerificationCode() + PropertyUtil.getProperty("Salt")).getBytes())
+				.substring(0, 6);
 		if (verificationCode.equals(code)) {
 			return true;
 		} else {
@@ -75,5 +82,30 @@ public class ExpressServiceImpl implements ExpressService {
 	public List<Express> queryExpressInfoOrderByDate(String contact, String expressNo, String status) {
 		return expressDao.queryExpressInfoOrderByDate(contact, expressNo, status);
 	}
+
+	/**
+	 * 分页
+	 */
+	@Override
+	public PageInfo<Express> queryExpressListByPage(Express express, Integer pageNum, Integer pageSize) {
+		pageNum = pageNum == null ? 1 : pageNum;
+		pageSize = pageSize == null ? 5 : pageSize;
+		PageHelper.startPage(pageNum, pageSize);
+		List<Express> list = expressDao.queryExpressInfo(express);
+		PageInfo<Express> page = new PageInfo<Express>(list);
+		return page;
+	}
 	
+	/**
+	 * 查询在货柜中的所有数据
+	 */
+	@Override
+	public PageInfo<Express> queryExpressInShelfListByPage(Express express, Integer pageNum, Integer pageSize) {
+		pageNum = pageNum == null ? 1 : pageNum;
+		pageSize = pageSize == null ? 5 : pageSize;
+		PageHelper.startPage(pageNum, pageSize);
+		List<Express> list = expressDao.queryExpressInShelfByPage(express);
+		PageInfo<Express> page = new PageInfo<Express>(list);
+		return page;
+	}
 }

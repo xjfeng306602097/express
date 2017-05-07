@@ -9,8 +9,9 @@
 <link href="../css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../js/bootstrap-3.1.1.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap-paginator.js"></script>
 </head>
-<body data-spy="scroll" data-target="#menu" style="overflow: hidden">
+<body data-spy="scroll" data-target="#menu" style="overflow: hidden;text-align:center">
 	<div class="navbar navbar-inverse navbar-fixed-top scrollclass"
 		id="menu">
 		<div class="container">
@@ -145,7 +146,7 @@
 	$(function() {
 		$('#searchButton').click(function() {
 			// add my code here
-			Express.getExpressList();
+			Express.getExpressListByPage();
 		});
 	});
 	</script>
