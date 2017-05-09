@@ -167,6 +167,12 @@ const admin= {
                         this.searchButton="查询";
                     });
                 },
+                exportExpress:function () {
+                    this.$http.post("export", this.express).then(function (response) {
+                            alert("hah");
+                        }).catch(function(response){
+                        })
+                },
                 //修改快递模态框
                 openModal: function (e) {
                     e.fromDate=(new Date(e.fromDate)).Format('yyyy-MM-dd');
@@ -254,9 +260,12 @@ const admin= {
 
                 },
                 notification:function (e) {
-                    // this.sendMail="发送中...";
+                    $('#mailSending').modal('show');
+
                     this.$http.post("sendMail",e).then(function (response) {
                         this.sendMail="通知";
+                        $('#inform').modal('hide');
+                        $('#mailSending').modal('hide');
                         this.mailResult=response.data;
                         $('#mailResult').modal('show');
                     }).catch(function (response) {
