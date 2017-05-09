@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -35,6 +36,8 @@ public class UserController {
     OverDueExpressService overDueExpressService;
     @Autowired
     SendMailService sendMailService;
+    // @Autowired
+    // ExcelService excelService;
 
 	/**
 	 * 登录页面
@@ -53,7 +56,12 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping(value = "/getExpress",method = RequestMethod.POST)
-    public List<Express> getExpress(@RequestBody Express express){
+    public List<Express> getExpress(@RequestBody Express express, HttpServletResponse response) throws IOException{
+
+        // List<Express> expresses=new ArrayList<>();
+        // expresses=expressService.queryExpressInfo(new Express());
+        // HSSFWorkbook hssfWorkbook=excelService.exportExpress(expresses);
+        // ExcelUtil.ExportExcel(hssfWorkbook,response);
         if (express.getStatus().equals("all")&&express.getStatus()!=null){
             express.setStatus(null);
         }
@@ -74,6 +82,13 @@ public class UserController {
         // }
         return expressList;
     }
+    // @RequestMapping(value = "/export",method = RequestMethod.POST)
+    // public void export(@RequestBody Express express,HttpServletResponse response) throws IOException{
+    //     List<Express> expresses=new ArrayList<>();
+    //     expresses=expressService.queryExpressInfo(new Express());
+    //     HSSFWorkbook hssfWorkbook=excelService.exportExpress(expresses);
+    //     ExcelUtil.ExportExcel(hssfWorkbook,response);
+    // }
 
     /**
      * 快件维护页面查询货柜信息
@@ -253,6 +268,12 @@ public class UserController {
         }
     }
 
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout(HttpServletRequest request) {
+        HttpSession session=request.getSession();
+        session.removeAttribute("user");
+        return "redirect:loginIndex";
+    }
     @RequestMapping(value = "/redirect", method = RequestMethod.GET)
     public String index(HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
