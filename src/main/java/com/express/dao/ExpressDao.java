@@ -54,4 +54,11 @@ public interface ExpressDao {
      * @return
      */
     public List<Express> queryExpressInfoOrderByDate(@Param("contact")String contact, @Param("expressNo")String expressNo, @Param("status")String status);
+    
+    /**
+     * 分页查询存在货柜的快件
+     * @param express
+     * @return
+     */
+    public List<Express> queryExpressInShelfByPage(Express express);
 }

@@ -183,4 +183,35 @@
 		</if>
 		order by arrive_date
 	</select>
+	
+	<select id="queryExpressInShelfByPage" resultMap="expressResult">
+		SELECT
+		id,express_no, from_date, arrive_date, receive_date, company
+		,
+		consignee, contact, verification_code, address_source, address_dest,
+		express_status, email_address
+		FROM express.expressinfo
+		where
+		express_status in ('E','O')
+		<if test="fromDate!=null and fromDate!=''">
+			and DATE_FORMAT(from_date,'%Y-%m-%d')=DATE_FORMAT(#{fromDate},'%Y-%m-%d')
+		</if>
+		<if test="arriveDate!=null and arriveDate!=''">
+			and DATE_FORMAT(arrive_date,'%Y-%m-%d')=DATE_FORMAT(#{arriveDate},'%Y-%m-%d')
+
+		</if>
+		<if test="expressNo!=null and  expressNo!=''">
+			and express_no=#{expressNo}
+		</if>
+		<if test="company!=null and company!=''">
+			and company=#{company}
+		</if>
+		<if test="consignee!=null and consignee!=''">
+			and consignee=#{consignee}
+		</if>
+		<if test="contact!=null and contact!=''">
+			and contact=#{contact}
+		</if>
+		order by arrive_date desc
+	</select>
 </mapper>

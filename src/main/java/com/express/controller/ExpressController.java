@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,6 +30,7 @@ import com.express.service.ExpressShelfService;
 import com.express.service.OverDueExpressService;
 import com.express.service.SendMailService;
 import com.express.util.PropertyUtil;
+import com.github.pagehelper.PageInfo;
 
 @Controller
 @RequestMapping("/express")
@@ -47,26 +49,17 @@ public class ExpressController {
 	SendMailService sendMailService;
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ExpressController.class);
 
-
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String toIndex(Model model) {
-		return "express/express";
-	}
-
-	@RequestMapping(value = "/vegas", method = RequestMethod.GET)
 	public String toVegasIndex(Model model) {
 		return "express/index";
 	}
 
-	@RequestMapping(value = "/getExpressList", method = RequestMethod.POST)
+	@RequestMapping(value = "/getExpressListByPage/{pageNum}/pageNum/{pageSize}/pageSize", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Express> getExpressList(@RequestBody Express express) {
-		express.setStatus("E");
-		List<Express> expressList = expressService.queryExpressInfo(express);
-		express.setStatus("O");
-		expressList.addAll(
-				expressService.queryExpressInfo(express));
-		return expressList;
+	public PageInfo<Express> getExpressListByPage(@PathVariable("pageNum") Integer pageNum,
+			@PathVariable("pageSize") Integer pageSize, @RequestBody Express express) {
+		PageInfo<Express> result = expressService.queryExpressInShelfListByPage(express, pageNum, pageSize);
+		return result;
 	}
 
 	@RequestMapping(value = "/getExpress", method = RequestMethod.POST)
@@ -77,7 +70,7 @@ public class ExpressController {
 		String status = express.getStatus();
 		// 判断订单验证码是否正确
 		express = expressService.queryExpressDetail(express);
-		if(expressService.affirmCode(express, postCode)){ // 判断是否通过验证
+		if (expressService.affirmCode(express, postCode)) { // 判断是否通过验证
 			switch (status) { // 根据
 			case "O":
 				// 过期快件处理
@@ -131,7 +124,7 @@ public class ExpressController {
 
 	@RequestMapping(value = "/resendEmail", method = RequestMethod.POST)
 	@ResponseBody
-	public Object resendEmail(@RequestBody Express express) throws IOException{
+	public Object resendEmail(@RequestBody Express express) throws IOException {
 		JSONObject result = new JSONObject();
 		express = expressService.queryExpressDetail(express);
 		String verificationCode = DigestUtils
