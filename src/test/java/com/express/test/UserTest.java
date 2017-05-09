@@ -36,4 +36,12 @@ public class UserTest extends BaseTestCase {
 		System.out.println(password.equals(result.getPassword()));
 	}
 
+	@Test
+	public void testString(){
+		String text = "2017年11月11日";
+		text = text.replace("年", "-");
+		text = text.replace("月", "-");
+		text = text.replace("日", "");
+		System.out.println(text);
+	}
 }

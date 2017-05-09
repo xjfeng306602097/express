@@ -101,10 +101,10 @@
 		FROM express.expressinfo
 		where
 		1=1
-		<if test="fromDate!=null and fromDate!=''">
+		<if test="fromDate!=null">
 			and DATE_FORMAT(from_date,'%Y-%m-%d')=DATE_FORMAT(#{fromDate},'%Y-%m-%d')
 		</if>
-		<if test="arriveDate!=null and arriveDate!=''">
+		<if test="arriveDate!=null">
 			and DATE_FORMAT(arrive_date,'%Y-%m-%d')=DATE_FORMAT(#{arriveDate},'%Y-%m-%d')
 
 		</if>
@@ -193,10 +193,10 @@
 		FROM express.expressinfo
 		where
 		express_status in ('E','O')
-		<if test="fromDate!=null and fromDate!=''">
+		<if test="fromDate!=null">
 			and DATE_FORMAT(from_date,'%Y-%m-%d')=DATE_FORMAT(#{fromDate},'%Y-%m-%d')
 		</if>
-		<if test="arriveDate!=null and arriveDate!=''">
+		<if test="arriveDate!=null">
 			and DATE_FORMAT(arrive_date,'%Y-%m-%d')=DATE_FORMAT(#{arriveDate},'%Y-%m-%d')
 
 		</if>

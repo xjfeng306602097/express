@@ -17,13 +17,18 @@ import com.express.dao.ExpressDao;
 import com.express.dao.OverDueExpressDao;
 import com.express.model.Express;
 import com.express.model.OverDueExpress;
+import com.express.service.ExpressService;
 import com.express.service.SmsService;
 import com.express.util.PropertyUtil;
+import com.github.pagehelper.PageInfo;
 
 public class TestCase extends BaseTestCase {
 
 	@Autowired
 	private SmsService smsService;
+	
+	@Autowired
+	private ExpressService expressService;
 	
 	@Resource
 	private ExpressDao expressDao;
@@ -70,5 +75,14 @@ public class TestCase extends BaseTestCase {
 		express.setStatus("0");
 		expressDao.insertExpressInfo(express);
 	}
-
+	
+	@Test
+	public void testQuery(){
+		Express express = new Express();
+		express.setContact("18319040556");
+		List<Express> list = expressService.queryExpressInfo(express);
+		System.out.println(list);
+		PageInfo<Express> pageInfo = expressService.queryExpressListByPage(express, null, null);
+		System.out.println(pageInfo);
+	}
 }
