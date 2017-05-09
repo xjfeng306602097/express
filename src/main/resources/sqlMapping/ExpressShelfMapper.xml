@@ -97,7 +97,7 @@
 				and expressinfo_id = #{express.id}
 			</if>
 			<if test="createDate != null">
-				and DATE_FORMAT(create_date,'%Y-%m-%d') = DATE_FORMAT(#{createDate},'%Y-%m-%d')
+				and DATE_FORMAT(create_date,'%Y-%m-%d') = DATE_FORMAT(#{createDate,,jdbcType=DATE},'%Y-%m-%d')
 			</if>
 			<if test="shelfStatus != null and shelfStatus!=''">
 				and shelf_status = #{shelfStatus}
