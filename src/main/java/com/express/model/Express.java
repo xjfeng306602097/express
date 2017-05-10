@@ -3,6 +3,8 @@ package com.express.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.express.annotation.ExcelCell;
+
 /**
  * Created by wshibiao on 2017/4/5.
  */
@@ -12,54 +14,67 @@ public class Express implements Serializable {
 	/**
 	 * id
 	 */
+	@ExcelCell(index=0)
 	private Long id;
 	/**
 	 * 快递单号
 	 */
+	@ExcelCell(index=1)
 	private String expressNo;
 	/**
 	 * 寄件时间
 	 */
+	@ExcelCell(index=2)
 	private Date fromDate;
 	/**
 	 * 到达时间
 	 */
+	@ExcelCell(index=3)
 	private Date arriveDate;
 	/**
 	 * 取件时间
 	 */
+	@ExcelCell(index=4)
 	private Date receiveDate;
 	/**
 	 * 联系方式
 	 */
+	@ExcelCell(index=5)
 	private String contact;
 	/**
 	 * 寄件源地址
 	 */
+	@ExcelCell(index=6)
 	private String addressSource;
 	/**
 	 * 到达地址
 	 */
+	@ExcelCell(index=7)
 	private String addressDest;
 	/**
 	 * 收件人
 	 */
+	@ExcelCell(index=8)
 	private String consignee;
 	/**
 	 * 快递公司
 	 */
+	@ExcelCell(index=9)
 	private String company;
 	/**
 	 * 验证码
 	 */
+	@ExcelCell(index=10)
 	private String verificationCode;
 	/**
 	 * 取件状态
 	 */
+	@ExcelCell(index=11)
 	private String status;
 	/**
 	 * 邮箱地址
 	 */
+	@ExcelCell(index=12)
 	private String emailAddress;
 
 	public void setReceiveDate(Date receiveDate) {

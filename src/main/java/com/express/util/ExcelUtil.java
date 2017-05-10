@@ -12,6 +12,8 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 
+import com.express.annotation.ExcelCell;
+
 public class ExcelUtil {
 
 	/**
@@ -66,6 +68,58 @@ public class ExcelUtil {
 				e.printStackTrace();
 			}
 			i++;
+		}
+	}
+	
+	/**
+	 * 基于注解方式实现列定位
+	 * @param row
+	 * @param obj
+	 */
+	public static <T> void setRowContentByAnnotation(HSSFRow row, T obj){
+		Field[] fields = obj.getClass().getDeclaredFields();
+		Method[] methods = obj.getClass().getDeclaredMethods();
+		for (Field field : fields) {
+			try {
+				int index = 0;
+				String fieldType = field.getType().getSimpleName();
+				String fieldGetName = parseGetName(field.getName());
+				Object value = null;
+				if (!checkGetMet(methods, fieldGetName)) {
+					continue;
+				}
+				if(field.isAnnotationPresent(ExcelCell.class)==true){
+					ExcelCell excelCell = field.getAnnotation(ExcelCell.class);
+					index = excelCell.index();
+				}
+				Method fieldGetMet = obj.getClass().getMethod(fieldGetName, new Class[] {});
+				value = fieldGetMet.invoke(obj, new Object[] {});
+				if (value != null){
+					if (fieldType.equals("Date")){
+						row.createCell(index).setCellValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format((Date) value));
+					} else if (fieldType.equalsIgnoreCase("Long")) {
+						row.createCell(index).setCellValue(Long.parseLong(value.toString()));
+					} else if (fieldType.equalsIgnoreCase("Double")) {
+						row.createCell(index).setCellValue(Double.parseDouble(value.toString()));
+					} else if (fieldType.equals("Integer")||fieldType.equals("int")){
+						row.createCell(index).setCellValue(Integer.parseInt(value.toString()));
+					} else if ("String".equals(fieldType)){
+						row.createCell(index).setCellValue(value.toString());
+					} else {
+						row.createCell(index).setCellValue("");
+					}
+				}
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

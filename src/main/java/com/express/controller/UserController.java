@@ -419,7 +419,7 @@ public class UserController {
 		List<Express> expressList = expressService.queryExpressInfo(express);
 		for (int i = 0; i < expressList.size(); i++) {
 			row = sheet.createRow((int) i + 1);
-			ExcelUtil.setRowContent(row, expressList.get(i));
+			ExcelUtil.setRowContentByAnnotation(row, expressList.get(i));
 		}
 		String fileName = "ExcelDownload";
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
