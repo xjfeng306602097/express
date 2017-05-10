@@ -198,7 +198,6 @@
 		</if>
 		<if test="arriveDate!=null">
 			and DATE_FORMAT(arrive_date,'%Y-%m-%d')=DATE_FORMAT(#{arriveDate},'%Y-%m-%d')
-
 		</if>
 		<if test="expressNo!=null and  expressNo!=''">
 			and express_no=#{expressNo}

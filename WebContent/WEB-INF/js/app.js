@@ -3,15 +3,15 @@
  */
 
 Date.prototype.Format = function (fmt) {
-    //在不引入日期控件情况下，采用此方法格式化日期为yyyy-mm-dd，否则更新快件信息时弹出框不能获取快件日期
+    // 在不引入日期控件情况下，采用此方法格式化日期为yyyy-mm-dd，否则更新快件信息时弹出框不能获取快件日期
     const o = {
-        "M+": this.getMonth() + 1, //月份
-        "d+": this.getDate(), //日
-        "h+": this.getHours(), //小时
-        "m+": this.getMinutes(), //分
-        "s+": this.getSeconds(), //秒
-        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-        "S": this.getMilliseconds() //毫秒
+        "M+": this.getMonth() + 1, // 月份
+        "d+": this.getDate(), // 日
+        "h+": this.getHours(), // 小时
+        "m+": this.getMinutes(), // 分
+        "s+": this.getSeconds(), // 秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
+        "S": this.getMilliseconds() // 毫秒
     };
     if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
     for (const k in o)
@@ -20,7 +20,7 @@ Date.prototype.Format = function (fmt) {
 };
 const admin= {
     route:function () {
-        /* 创建组件构造器  */
+        /* 创建组件构造器 */
         const Home = {
             template: '#home',
         };
@@ -28,7 +28,7 @@ const admin= {
             template: '#about',
 
         };
-        //查询当日快件组件
+        // 查询当日快件组件
         const Express = {
             template: '#query-template',
             data: function () {
@@ -50,7 +50,13 @@ const admin= {
                     },
                     mailResult:{},
                     express: {
-                        status:"all"
+                    	fromDate : null,
+                    	arriveDate : null,
+                    	expressNo : null,
+                        status:"all",
+                        company : null,
+                        consignee : null,
+                        contact : null,
                     },
                     newExpress: {
                         expressNo:null,
@@ -76,16 +82,29 @@ const admin= {
                 }
             },
             computed:{
+            	exportExcel : function() {
+                	const params = {
+                		fromDate : this.express.fromDate,
+                		arriveDate : this.express.arriveDate,
+                		expressNo : this.express.expressNo,
+                		status : this.express.status,
+                		company : this.express.company,
+                		consignee : this.express.consignee,
+                		contact : this.express.contact
+                	};
+            		$('#downloadExcel').attr("href", 'downloadExcel/' + JSON.stringify(params)+ '/params');
+                },
                 val:function () {
                     const mailRegex = /^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g;
                     const phoneRegex = /^1(3|4|5|7|8)\d{9}$/;
                     const expressNoRegex = /^[0-9a-zA-Z]{10,}$/;
-                    // if (this.newExpress.consignee=="bb"&&this.newExpress.consignee!=null&&this.newExpress.consignee!=""){
-                    //     this.isShowError.nameError=true;
-                    //     // this.isShowError.phoneError=false;
-                    //     // this.isShowError.mailError=false;
-                    //     // this.isShowError.expressNoError=false;
-                    //     return this.errorMessage.name="不能为bb"
+                    // if
+					// (this.newExpress.consignee=="bb"&&this.newExpress.consignee!=null&&this.newExpress.consignee!=""){
+                    // this.isShowError.nameError=true;
+                    // // this.isShowError.phoneError=false;
+                    // // this.isShowError.mailError=false;
+                    // // this.isShowError.expressNoError=false;
+                    // return this.errorMessage.name="不能为bb"
                     // }
                     if (!mailRegex.test(this.newExpress.emailAddress)&&this.newExpress.emailAddress!=null&&this.newExpress.emailAddress!=""){
                         this.isShowError.phoneError=false;
@@ -150,9 +169,10 @@ const admin= {
                 }
             },
             methods: {
-                //查询快件
+                // 查询快件
                 getExpressList: function () {
                     this.searchButton="查询中...";
+                    debugger
                     this.$http.post("getExpress", this.express).then(function (response) {
                         response.data.forEach(function (item) {
                             item.fromDate = new Date(item.fromDate).Format('yyyy-MM-dd');
@@ -167,7 +187,13 @@ const admin= {
                         this.searchButton="查询";
                     });
                 },
-                //修改快递模态框
+                exportExpress:function () {
+                    this.$http.post("downloadExcel", this.express, {responseType : 'blob'}).then(function (response) {
+                            alert("hah");
+                        }).catch(function(response){
+                        })
+                },
+                // 修改快递模态框
                 openModal: function (e) {
                     e.fromDate=(new Date(e.fromDate)).Format('yyyy-MM-dd');
                     e.arriveDate=(new Date(e.arriveDate)).Format('yyyy-MM-dd');
@@ -178,7 +204,8 @@ const admin= {
                 showShelfLocation: function (e) {
                     e.fromDate=(new Date(e.fromDate)).Format('yyyy-MM-dd');
                     e.arriveDate=(new Date(e.arriveDate)).Format('yyyy-MM-dd');
-                    // e.receiveDate=(e.receiveDate!=null)?(new Date(e.receiveDate)).Format('yyyy-MM-dd'):"";
+                    // e.receiveDate=(e.receiveDate!=null)?(new
+					// Date(e.receiveDate)).Format('yyyy-MM-dd'):"";
                     this.tempExpress=e;
                     this.$http.post('getShelf',e).then(function (response) {
                         this.location=response.data;
@@ -188,8 +215,10 @@ const admin= {
                     });
                 },
                 putIntoShelf: function () {
-                    // this.tempExpress.fromDate=(new Date(this.tempExpress.fromDate)).Format('yyyy-MM-dd');
-                    // this.tempExpress.arriveDate=(new Date(this.tempExpress.arriveDate)).Format('yyyy-MM-dd');
+                    // this.tempExpress.fromDate=(new
+					// Date(this.tempExpress.fromDate)).Format('yyyy-MM-dd');
+                    // this.tempExpress.arriveDate=(new
+					// Date(this.tempExpress.arriveDate)).Format('yyyy-MM-dd');
                     // // alert(this.tempExpress.receiveDate);
                     // this.tempExpress.receiveDate=null;
                     this.$http.post('putIntoShelf',this.tempExpress).then(function (response) {
@@ -202,15 +231,15 @@ const admin= {
                         alert(response.data);
                     });
                 },
-                //录入快递模态框
+                // 录入快递模态框
                 createModal: function () {
                     $('#createExpressModal').modal('show');
-                    //采用下面方法打开模态框无法绑定点击事件，暂时没有找到解决方案，因此模态框写在sap组件当中
+                    // 采用下面方法打开模态框无法绑定点击事件，暂时没有找到解决方案，因此模态框写在sap组件当中
                     // $('#createExpressModal').modal({
-                    //     show : true, // 显示弹出层
-                    //     backdrop : 'static', // 禁止位置关闭
-                    //     keyboard : true, // 关闭键盘事件
-                    //     remote : "getCreateModal"
+                    // show : true, // 显示弹出层
+                    // backdrop : 'static', // 禁止位置关闭
+                    // keyboard : true, // 关闭键盘事件
+                    // remote : "getCreateModal"
                     // }).on('loaded.bs.modal', function() {
                     //
                     // }).on('shown.bs.modal', function(){
@@ -265,7 +294,7 @@ const admin= {
                     })
                 },
                 validateSubmit:function () {
-                    //录入快递的表单验证
+                    // 录入快递的表单验证
                     const mailRegex = /^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g;
                     const phoneRegex = /^1(3|4|5|7|8)\d{9}$/;
                     const expressNoRegex = /^[0-9a-zA-Z]{10,}$/;
@@ -349,15 +378,15 @@ const admin= {
             }
         };
 
-        /* 创建路由映射  */
+        /* 创建路由映射 */
         const routes = [
             {path: '/user', component: Home},
             {path: '/express', component: Express},
             {path: '/shelf', component: Shelf}
         ];
-        /* 创建路由器  */
+        /* 创建路由器 */
         const router = new VueRouter({routes});
-        /* 启动路由  */
+        /* 启动路由 */
         const app = new Vue({router}).$mount('#app');
     }
 };

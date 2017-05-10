@@ -400,9 +400,11 @@
             <button id="createExpress" class="btn btn-primary" type="button" @click="createModal()" >
                 <span class="glyphicon glyphicon-plus"></span>录入快件
             </button>
-            <button id="export" class="btn btn-primary" type="button" @click="exportExpress()" >
-                <span class="glyphicon glyphicon-plus"></span>导出
+			<a id="downloadExcel" href="downloadExcel/{'status':'all'}/params">
+            <button class="btn btn-primary" type="button">
+                <span class="glyphicon glyphicon-plus"></span>导出{{exportExcel}}
             </button>
+			</a>
 			</div>
         </form>
 
