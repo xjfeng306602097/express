@@ -4,7 +4,7 @@
 var Admin = {
 	login : function() {
 		if (Admin.checkValidate(user)) {
-			vue.$http.post('login',user).then(function (response) {
+			vue.$http.post('login',user,{params:{imageCode:this.code}}).then(function (response) {
 				if (response.data.loginStatus == 'success'){
 					window.location.href = "redirect";
 				} else if(response.data.loginStatus == 'errorpassword'){
@@ -16,6 +16,11 @@ var Admin = {
 					vue._data.errorUserIdMessage = response.data.message;
 					setTimeout(function(){
 						vue._data.errorUserIdMessage = null;
+					},3888);
+				} else if(response.data.loginStatus == 'errorImageCode'){
+					vue._data.errorImageCodeMessage = response.data.message;
+					setTimeout(function(){
+						vue._data.errorImageCodeMessage = null;
 					},3888);
 				}
             }).catch(function (response) {
@@ -46,7 +51,10 @@ var Admin = {
 			return false;
 		}
 	},
-	logout : function() {
-
+	changeImage : function() {
+        vue.$http.get(this.imgUrl).then(function (response) {
+            this.imgUrl='/admin/getImageCode?'+Math.random();
+        }).catch(function (response) {
+        });
 	}
 };

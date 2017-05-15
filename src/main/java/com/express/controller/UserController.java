@@ -1,24 +1,13 @@
 package com.express.controller;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.express.model.*;
+import com.express.service.*;
+import com.express.util.ExcelUtil;
+import com.express.util.ImageCodeUtil;
+import com.express.util.PropertyUtil;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -26,27 +15,17 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.express.model.Express;
-import com.express.model.ExpressShelf;
-import com.express.model.LoginResult;
-import com.express.model.OverDueExpress;
-import com.express.model.User;
-import com.express.service.ExpressService;
-import com.express.service.ExpressShelfService;
-import com.express.service.OverDueExpressService;
-import com.express.service.SendMailService;
-import com.express.service.UserService;
-import com.express.util.ExcelUtil;
-import com.express.util.PropertyUtil;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -276,24 +255,34 @@ public class UserController {
 
 	@ResponseBody
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public LoginResult login(@RequestBody User params, HttpServletRequest request) throws IOException {
+	public LoginResult login(@RequestBody JSONObject params, HttpServletRequest request,HttpServletResponse response) throws IOException {
 		LoginResult loginResult = new LoginResult();
 		HttpSession session = request.getSession();
-		String userId = params.getUserId();
+		String userId = (String) params.get("userId");
 		String password = DigestUtils
-				.md5DigestAsHex((params.getPassword() + PropertyUtil.getProperty("Salt")).getBytes());
+				.md5DigestAsHex((params.get("password") + PropertyUtil.getProperty("Salt")).getBytes());
 		User result = userService.getUserById(userId);
 		if (result != null) {
-			if (result.getPassword().equals(password)) {
-				params.setPassword(password);
-				session.setMaxInactiveInterval(20 * 60); // 20分钟
-				session.setAttribute("user", params);
-				loginResult.setLoginStatus("success");
-				loginResult.setMessage("success");
-				return loginResult;
-			} else {
-				loginResult.setLoginStatus("errorpassword");
-				loginResult.setMessage(PropertyUtil.getProperty("PleaseCheckYourPassword"));
+			String code=(String) params.get("imageCode");
+			String sessionCode=(String) request.getSession().getAttribute("code");
+			if(code.equals(sessionCode)) {
+				if (result.getPassword().equals(password)) {
+					User user = new User();
+					user.setUserId(userId);
+					user.setPassword(password);
+					session.setMaxInactiveInterval(20 * 60); // 20分钟
+					session.setAttribute("user", user);
+					loginResult.setLoginStatus("success");
+					loginResult.setMessage("success");
+					return loginResult;
+				} else {
+					loginResult.setLoginStatus("errorpassword");
+					loginResult.setMessage(PropertyUtil.getProperty("PleaseCheckYourPassword"));
+					return loginResult;
+				}
+			}else {
+				loginResult.setLoginStatus("errorImageCode");
+				loginResult.setMessage(PropertyUtil.getProperty("PleaseCheckYourImageCode"));
 				return loginResult;
 			}
 		} else {
@@ -452,5 +441,27 @@ public class UserController {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 生成图片验证码
+	 * @param response
+	 * @param request
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/getImageCode",method = RequestMethod.GET)
+	public void getImage(HttpServletResponse response,HttpServletRequest request)throws IOException{
+		// 设置响应的类型格式为图片格式
+        response.setContentType("image/jpeg");
+		//禁止图像缓存。
+		response.setHeader("Pragma", "no-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setDateHeader("Expires", 0);
+
+		ImageCodeUtil vCode = new ImageCodeUtil(100,30,5,10);
+		HttpSession session=request.getSession();
+		session.setAttribute("code", vCode.getCode());
+		vCode.write(response.getOutputStream());
+		response.flushBuffer();
 	}
 }

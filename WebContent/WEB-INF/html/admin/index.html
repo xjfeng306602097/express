@@ -51,10 +51,16 @@
 									<span style="color:red">{{errorPasswordMessage}}</span>
 								</div>
 								<div class="form-group">
+									<input type="text" v-model="user.imageCode"/>
+									<img v-bind:src="imgUrl" @click="changeImage()" alt="验证码"/>
+									<span style="color:red">{{errorImageCodeMessage}}</span>
+								</div>
+								<div class="form-group">
 									<button type="submit" class="btn btn-lg btn-info"
 										v-on:click="login()" style="margin-left: 20%">
 										<span class="glyphicon glyphicon-off"></span> 登录
 									</button>
+
 								</div>
 							</div>
 						</div>
@@ -74,7 +80,8 @@
 		});
 		var user = {
 			userId : '',
-			password : ''
+			password : '',
+            imageCode:''
 		};
 		var vue = new Vue({
 	            el: '#app',
@@ -83,11 +90,16 @@
 					user : user,
 					errorUserIdMessage : null,
 					errorPasswordMessage : null,
-			    },
+                    errorImageCodeMessage:null,
+					imgUrl:'/admin/getImageCode?'+Math.random()
+                },
 			    methods:{
 					login : function(){
 						Admin.login(user);
-					}
+					},
+					changeImage:function () {
+						Admin.changeImage();
+                    }
 				}
 	     });
 	</script>
