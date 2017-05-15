@@ -283,11 +283,14 @@ const admin= {
 
                 },
                 notification:function (e) {
-                    // this.sendMail="发送中...";
+                    $('#mailSending').modal('show');
+
                     this.$http.post("sendMail",e).then(function (response) {
-                        this.sendMail="通知";
-                        this.mailResult=response.data;
-                        $('#mailResult').modal('show');
+                            this.sendMail="通知";
+                            $('#inform').modal('hide');
+                            $('#mailSending').modal('hide');
+                            this.mailResult=response.data;
+                            $('#mailResult').modal('show');
                     }).catch(function (response) {
                         this.mailResult=response.data;
                         $('#mailResult').modal('show');
