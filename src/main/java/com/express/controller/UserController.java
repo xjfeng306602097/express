@@ -48,7 +48,7 @@ public class UserController {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/index", method = RequestMethod.GET)
+	@RequestMapping(value = "/loginIndex", method = RequestMethod.GET)
 	public String toIndex() {
 		return "admin/userlogin";
 	}
@@ -376,7 +376,7 @@ public class UserController {
 		return object;
 	}
 
-	@RequestMapping(value = "/loginIndex", method = RequestMethod.GET)
+	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String toLoginIndex() {
 		return "admin/index";
 	}
