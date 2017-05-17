@@ -305,7 +305,7 @@ public class UserController {
 		if (user != null) {
 			return "admin/sap";
 		} else {
-			return "redirect:loginIndex";
+			return "redirect:index";
 		}
 	}
 
