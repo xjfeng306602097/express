@@ -172,7 +172,6 @@ const admin= {
                 // 查询快件
                 getExpressList: function () {
                     this.searchButton="查询中...";
-                    debugger
                     this.$http.post("getExpress", this.express).then(function (response) {
                         response.data.forEach(function (item) {
                             item.fromDate = new Date(item.fromDate).Format('yyyy-MM-dd');
