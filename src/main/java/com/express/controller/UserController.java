@@ -40,8 +40,8 @@ public class UserController {
 	OverDueExpressService overDueExpressService;
 	@Autowired
 	SendMailService sendMailService;
-	// @Autowired
-	// ExcelService excelService;
+	private final String salt = "avadfa%^%#!&#%^fdafafa~@$%^$&&^%&erere}{}*(*&*^";
+
 
 	/**
 	 * 登录页面
@@ -324,11 +324,9 @@ public class UserController {
 	@RequestMapping(value = "/createExpress", method = RequestMethod.POST)
 	public List<Express> createUser(@RequestBody Express express) throws IOException {
 		express.setStatus("N");
+		String verificationCode = express.getExpressNo() + express.getContact() + salt;
+		express.setVerificationCode(DigestUtils.md5DigestAsHex(verificationCode.getBytes()));
 		expressService.createExpress(express);
-		// userNew.setUserName(user.getUserName());
-		// userNew.setUserId(user.getUserId());
-		// userNew.setPassword(DigestUtils.md5DigestAsHex((user.getPassword()+PropertyUtil.getProperty("LoginSalt")).getBytes()));
-		// userService.createUser(userNew);
 		List<Express> list = new ArrayList<>();
 		list.add(express);
 		return list;
