@@ -43,5 +43,6 @@ public class UserTest extends BaseTestCase {
 		text = text.replace("月", "-");
 		text = text.replace("日", "");
 		System.out.println(text);
+		System.out.println("搞事情，搞冲突");
 	}
 }
