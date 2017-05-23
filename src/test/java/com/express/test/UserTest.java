@@ -17,10 +17,10 @@ public class UserTest extends BaseTestCase {
 	@Test
 	public void test() throws IOException {
 		User user = new User();
-		user.setUserId("a306602097");
-		user.setUserName("老肖");
+		user.setUserId("hanchunyu");
+		user.setUserName("韩春玉");
 		user.setPassword(DigestUtils
-				.md5DigestAsHex(("a123456" + PropertyUtil.getProperty("Salt")).getBytes()));
+				.md5DigestAsHex(("123456" + PropertyUtil.getProperty("Salt")).getBytes()));
 		userService.createUser(user);
 	}
 	
@@ -43,5 +43,6 @@ public class UserTest extends BaseTestCase {
 		text = text.replace("月", "-");
 		text = text.replace("日", "");
 		System.out.println(text);
+		System.out.println("搞事情，搞冲突");
 	}
 }
