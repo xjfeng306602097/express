@@ -90,7 +90,7 @@ public class ExpressController {
 				expressHistory.setCreateDate(new Date());
 				expressHistoryService.insertExpressHistory(expressHistory);// 插入历史记录
 				// 发送已收件消息
-				jsonObject.put("location", "OverDueShelf");
+				jsonObject.put("location", "隔日件货柜");
 				break;
 			case "E":
 				// 当天快件处理
