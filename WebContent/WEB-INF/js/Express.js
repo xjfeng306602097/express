@@ -16,21 +16,26 @@ var Express = {
 	},
 	getExpress : function(ev) {
 		var target = ev.target;
-		$('#searchModal').modal('hide');
-		$('#expressModal').modal({
-			show : true, // 显示弹出层
-			backdrop : 'static', // 禁止位置关闭
-			keyboard : true, // 关闭键盘事件
-			remote : "getExpressModal"
-		}).on('loaded.bs.modal', function() {
-			$('#expressNoText').html(target.expressNo);
-			$('#selectExpressNo').val(target.expressNo);
-			$('#expressStatus').val(target.status);
-		}).on('shown.bs.modal', function() {
-			$('#expressNoText').html(target.expressNo);
-			$('#selectExpressNo').val(target.expressNo);
-			$('#expressStatus').val(target.status);
-		});
+		var count = $.cookie(target.expressNo);
+		if (count == null || count < 5) {
+			$('#searchModal').modal('hide');
+			$('#expressModal').modal({
+				show : true, // 显示弹出层
+				backdrop : 'static', // 禁止位置关闭
+				keyboard : true, // 关闭键盘事件
+				remote : "getExpressModal"
+			}).on('loaded.bs.modal', function() {
+				$('#expressNoText').html(target.expressNo);
+				$('#selectExpressNo').val(target.expressNo);
+				$('#expressStatus').val(target.status);
+			}).on('shown.bs.modal', function() {
+				$('#expressNoText').html(target.expressNo);
+				$('#selectExpressNo').val(target.expressNo);
+				$('#expressStatus').val(target.status);
+			});
+		} else if (count >= 5) {
+			alert("该快件输入密码错误次数已达五次，请隔天再领！");
+		}
 	},
 	resendEmail : function(ev) {
 		$('#searchModal').modal('hide');
@@ -83,9 +88,24 @@ var Express = {
 			dataType : "json",
 			data : JSON.stringify(express),
 			success : function(data) {
-				$('#checkExpress').hide(); // 清空列表
-				$('#ensureExpress').show();
-				$('#expressLocation').html(data.location);
+				if (data.location === 'W') {
+					var count = $.cookie(data.expressNo.toString());
+					if (count == null || typeof count === 'undefined') {
+						count = 0;
+						count++;
+						alert('密码错误' + count + '次！');
+					} else if (count >= 5) {
+						alert('密码错误5次，请隔日再领取！');
+					} else {
+						count++;
+						alert('密码错误' + count + '次！');
+					}
+					$.cookie(data.expressNo.toString(), count, {expires: 1, path: '/express'});
+				} else {
+					$('#checkExpress').hide(); // 清空列表
+					$('#ensureExpress').show();
+					$('#expressLocation').html(data.location);
+				}
 				$('#expressModal').on('hide.bs.modal', function() {
 					$('#checkExpress').show(); // 清空列表
 					$('#expressNoText').html('');

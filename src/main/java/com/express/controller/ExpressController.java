@@ -117,6 +117,9 @@ public class ExpressController {
 				break;
 			}
 			sendMailService.sendGetExpressSuccessEmail(express);
+		} else {
+			jsonObject.put("location", "W");
+			jsonObject.put("expressNo", express.getExpressNo());
 		}
 		return jsonObject;
 	}
